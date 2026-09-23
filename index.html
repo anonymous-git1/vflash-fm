@@ -126,27 +126,27 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
 
 <p class="lede"><b>VFlash-FM</b> speeds up video language models by proposing a whole block of 16 tokens in <b>one drafter forward</b>, which the unchanged target verifies in one pass. The drafter never processes the video: it reads the target's hidden states, and it is trained along a discrete flow from masks to the target's continuation instead of only at the all-mask start. On LLaVA-OneVision-7B this gives a <b>3.85×</b> macro-average decoding speedup across five video benchmarks.</p>
 
-<h2 id="demo">Side by side: autoregressive decoding vs VFlash-FM</h2>
-<p>Four clips from two benchmarks, played at a quarter of real time. In each video the clip plays at the top left while both decoders write, and the panel at the top right shows every verification cycle: the anchor, the 15 drafted tokens, and the target's correction. In all four, the VFlash-FM output is identical to the autoregressive output, token for token.</p>
+<h2 id="demo">Autoregressive decoding vs DFlash vs VFlash-FM</h2>
+<p>Four clips, each decoded three times on the same H100 and played back at a quarter of real time: once autoregressively, once with a DFlash drafter trained on the all-mask state alone, and once with the same architecture trained along the flow. All three outputs are identical to the token, so the panels differ only in how fast they fill.</p>
 <div class="gallery">
   <figure>
     <div class="videobox"><video controls playsinline preload="metadata" poster="assets/demo1_mvbench_poster.jpg"><source src="assets/demo1_mvbench.mp4" type="video/mp4"></video></div>
-    <figcaption><b>MVBench</b> · 9 s clip · <b>4.83×</b> decoding speedup · 6.67 tokens committed per cycle · identical output</figcaption>
+    <figcaption><b>MVBench</b> · 9 s clip · DFlash <b>4.07×</b> · VFlash-FM <b>4.66×</b> · 6.67 vs 5.58 tokens per cycle · all three outputs identical</figcaption>
   </figure>
   <figure>
     <div class="videobox"><video controls playsinline preload="metadata" poster="assets/demo2_vdc_poster.jpg"><source src="assets/demo2_vdc.mp4" type="video/mp4"></video></div>
-    <figcaption><b>VideoDetailCaption</b> · 111 s clip · <b>4.41×</b> decoding speedup · 6.08 tokens committed per cycle · identical output</figcaption>
+    <figcaption><b>VideoDetailCaption</b> · 111 s clip · DFlash <b>3.65×</b> · VFlash-FM <b>4.26×</b> · 6.08 vs 5.01 tokens per cycle · all three outputs identical</figcaption>
   </figure>
   <figure>
     <div class="videobox"><video controls playsinline preload="metadata" poster="assets/demo3_vdc_poster.jpg"><source src="assets/demo3_vdc.mp4" type="video/mp4"></video></div>
-    <figcaption><b>VideoDetailCaption</b> · 72 s clip · <b>4.27×</b> decoding speedup · 5.89 tokens committed per cycle · identical output</figcaption>
+    <figcaption><b>VideoDetailCaption</b> · 72 s clip · DFlash <b>3.65×</b> · VFlash-FM <b>3.95×</b> · 5.89 vs 5.18 tokens per cycle · all three outputs identical</figcaption>
   </figure>
   <figure>
     <div class="videobox"><video controls playsinline preload="metadata" poster="assets/demo4_vdc_poster.jpg"><source src="assets/demo4_vdc.mp4" type="video/mp4"></video></div>
-    <figcaption><b>VideoDetailCaption</b> · 84 s clip · <b>3.93×</b> decoding speedup · 5.45 tokens committed per cycle · identical output</figcaption>
+    <figcaption><b>VideoDetailCaption</b> · 84 s clip · DFlash <b>3.10×</b> · VFlash-FM <b>3.72×</b> · 5.45 vs 4.36 tokens per cycle · all three outputs identical</figcaption>
   </figure>
 </div>
-<p class="note">Decode time after prefill, recorded with the paper's evaluation harness on one H100: native grouped-query attention, preallocated KV caches, block 16, one drafter forward per block, greedy decoding.</p>
+<p class="note">Decode time after prefill, recorded with the paper's evaluation harness: native grouped-query attention, preallocated KV caches, block 16, one drafter forward per block, greedy decoding. Autoregressive decoding measures 10.6 to 11.1 ms per token on these clips.</p>
 
 <h2 id="how">How VFlash-FM works</h2>
 <p>The drafter never processes the video. It reads the hidden states the frozen target has already computed for every context position, proposes a whole block of 15 tokens in one forward, and the unchanged target verifies the block in one forward. Whatever is accepted is exactly what the target would have generated on its own.</p>
