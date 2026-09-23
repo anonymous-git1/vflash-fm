@@ -7,7 +7,7 @@
   --green:#1f8a4c; --green-soft:#e3f2e8; --orange:#d8701c; --orange-soft:#fbeadb;
   --chip-dis:#eef1ef; --chip-dis-ink:#8a938f;
   --g1:#c2c9c6; --g2:#939c98; --g3:#5e6763;
-  --fm:#176B91; --ours-row:#FFF8DC;
+  --fm:#d8701c; --ours-row:#FFF8DC;
   --display:"Bricolage Grotesque","Source Sans 3",system-ui,sans-serif;
   --body:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -20,7 +20,7 @@
     --green:#2fa862; --green-soft:#17301f; --orange:#e5872f; --orange-soft:#3a2614;
     --chip-dis:#232927; --chip-dis-ink:#8a948f;
     --g1:#3f4744; --g2:#68726d; --g3:#98a29d;
-    --fm:#2F8FBD; --ours-row:#2b2716;
+    --fm:#d95926; --ours-row:#2b2716;
     color-scheme:dark;
   }
 }
@@ -30,7 +30,7 @@
   --green:#2fa862; --green-soft:#17301f; --orange:#e5872f; --orange-soft:#3a2614;
   --chip-dis:#232927; --chip-dis-ink:#8a948f;
   --g1:#3f4744; --g2:#68726d; --g3:#98a29d;
-  --fm:#2F8FBD; --ours-row:#2b2716;
+  --fm:#d95926; --ours-row:#2b2716;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -53,9 +53,6 @@ header .sub{font-family:var(--display);font-weight:500;font-size:clamp(19px,2.6v
 .btn:focus-visible{box-shadow:0 0 0 3px var(--green-soft)}
 .btn.soon{color:var(--muted);border-style:dashed;cursor:default}
 .btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.strip{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin:34px 0 8px;border-radius:10px;overflow:hidden;background:var(--line);padding:4px}
-.strip img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:4px}
-.strip-cap{text-align:center;color:var(--muted);font-size:14px;margin-bottom:34px}
 .lede{font-size:20px;line-height:1.5;max-width:64ch;margin:0 auto 6px}
 .lede b{color:var(--green)}
 figure{margin:0}
@@ -94,7 +91,6 @@ tr:last-child td{border-bottom:none}
 footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
 @media (max-width:700px){
   .gallery{grid-template-columns:1fr}
-  .strip{grid-template-columns:repeat(4,1fr)}
   body{font-size:16px}
 }
 @media (prefers-reduced-motion: reduce){ .tip{transition:none} }
@@ -127,11 +123,6 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
   </div>
 </header>
 
-<div class="strip" aria-label="Eight frames from the demo clip">
-  <img src="assets/frame_00.jpg" alt=""><img src="assets/frame_01.jpg" alt=""><img src="assets/frame_02.jpg" alt=""><img src="assets/frame_03.jpg" alt="">
-  <img src="assets/frame_04.jpg" alt=""><img src="assets/frame_05.jpg" alt=""><img src="assets/frame_06.jpg" alt=""><img src="assets/frame_07.jpg" alt="">
-</div>
-<div class="strip-cap">One of the demo clips: 128 sampled frames become 25,119 prompt tokens for the target model.</div>
 
 <p class="lede"><b>VFlash-FM</b> speeds up video language models by proposing a whole block of 16 tokens in <b>one drafter forward</b>, which the unchanged target verifies in one pass. The drafter never processes the video: it reads the target's hidden states, and it is trained along a discrete flow from masks to the target's continuation instead of only at the all-mask start. On LLaVA-OneVision-7B this gives a <b>3.85×</b> macro-average decoding speedup across five video benchmarks.</p>
 
