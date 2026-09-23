@@ -294,7 +294,7 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
 <h2 id="results">Decoding speedup over autoregressive decoding</h2>
 <div class="chart" id="chartBars">
   <p class="title">LLaVA-OneVision-7B, five video benchmarks</p>
-  <p class="subtitle">Fastest listed variant of each method. Baselines are the published numbers of each study on its own hardware and protocol; ours are three locked draws of 50 clips per benchmark on one H100, greedy, block 16, one drafter forward per block.</p>
+  <p class="subtitle">Fastest listed variant of each method. Baselines are the published numbers of each study on its own hardware and protocol; ours are 50 clips × 3 seeds per benchmark on one H100, greedy, block 16, one drafter forward per block.</p>
   <svg id="svgBars" viewBox="0 0 860 360" role="img" aria-label="Grouped bars of decoding speedup per benchmark for four methods"></svg>
   <div class="legend" id="legendBars"></div>
   <div class="tip" id="tipBars"></div>
