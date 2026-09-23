@@ -59,19 +59,23 @@ figure{margin:0}
 figcaption{font-size:17.5px;color:var(--ink2);line-height:1.5;margin-top:10px;max-width:80ch}
 figure.bleed > figcaption{max-width:900px;margin-inline:auto}   /* wide figures: caption aligns with the text column */
 .bleed{width:min(1240px,calc(100vw - 48px));margin-left:50%;transform:translateX(-50%)}
-.carousel{margin-top:10px;--peek:9%;--gap:16px}
-.carousel.bleed{width:min(1400px,calc(100vw - 48px),calc((100vh - 230px) * 16 / 9 / 0.82))}
-.cviewport{position:relative;overflow:hidden;border-radius:12px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.carousel{margin-top:10px;--focus:70%;--off:.55;--stack:.10;--rot:48;--depth:260;--depth2:90;--scale:.85;--vp-ar:100/43}
+.carousel.bleed{width:min(1400px,calc(100vw - 48px),calc((100vh - 230px) * 100 / 43))}
+.cviewport{position:relative;overflow:hidden;border-radius:12px;touch-action:pan-y;user-select:none;-webkit-user-select:none;
+  aspect-ratio:var(--vp-ar);perspective:1600px;perspective-origin:50% 50%}
 .cviewport.dragging{cursor:grabbing}
 .cviewport:focus-visible{outline:2px solid var(--fm);outline-offset:4px}
-.cstrip{display:flex;gap:var(--gap);padding-inline:var(--peek);will-change:transform}
-.cslide{flex:0 0 100%;min-width:0}
-.cslide:not(.is-current) video{pointer-events:none}
-.cslide figcaption{margin-top:12px;text-align:center;max-width:none}
-.czone{position:absolute;top:0;bottom:0;width:var(--peek);z-index:3;display:flex;align-items:center;justify-content:center;
+.cstrip{position:absolute;inset:0;transform-style:preserve-3d;z-index:1}
+.cslide{position:absolute;top:50%;left:50%;width:var(--focus);margin:0;will-change:transform;pointer-events:none;backface-visibility:hidden}
+.cslide.is-current{pointer-events:auto}
+.cslide .videobox{box-shadow:0 14px 34px rgba(0,0,0,.30)}
+.ccaps{position:relative;min-height:2.7em;margin-top:12px}
+.ccap{position:absolute;inset:0;margin:0;text-align:center;opacity:0;transition:opacity .25s;font-size:17.5px;color:var(--ink2);line-height:1.5}
+.ccap.on{opacity:1}
+.czone{position:absolute;top:0;bottom:0;width:calc((100% - var(--focus)) / 2);z-index:3;display:flex;align-items:center;justify-content:center;
   cursor:pointer;transition:opacity .2s}
-.czone.left{left:0;background:linear-gradient(to right,rgba(16,20,18,.30),rgba(16,20,18,0))}
-.czone.right{right:0;background:linear-gradient(to left,rgba(16,20,18,.30),rgba(16,20,18,0))}
+.czone.left{left:0;background:linear-gradient(to right,rgba(16,20,18,.22),rgba(16,20,18,0))}
+.czone.right{right:0;background:linear-gradient(to left,rgba(16,20,18,.22),rgba(16,20,18,0))}
 .czone svg{width:42px;height:42px;fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;
   opacity:.6;transition:opacity .15s,transform .15s;filter:drop-shadow(0 1px 3px rgba(0,0,0,.55))}
 .czone:hover svg{opacity:1;transform:scale(1.1)}
@@ -117,10 +121,10 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
 @media (max-width:700px){
   body{font-size:18px}
   .bleed,.carousel.bleed{width:100%;margin-left:0;transform:none}
-  .carousel{--peek:0%;--gap:12px}
+  .carousel{--focus:100%;--off:1.02;--rot:30;--depth:120;--depth2:60;--scale:.92;--vp-ar:100/60}
   .czone{display:none}
 }
-@media (prefers-reduced-motion: reduce){ .tip{transition:none} .cdot{transition:none} .czone svg{transition:none} }
+@media (prefers-reduced-motion: reduce){ .tip{transition:none} .cdot{transition:none} .czone svg{transition:none} .ccap{transition:none} }
 .diagram{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
 .diagram svg{display:block;width:100%;min-width:860px;height:auto;font-family:var(--body);color:var(--ink)}
 .d-h{font-size:18px;font-weight:700;fill:var(--ink)} .d-h2{font-size:17px;font-weight:600;fill:var(--ink)} .d-sub{font-size:13px;fill:var(--muted)} .d-note{font-size:14.5px;fill:var(--ink2)}
@@ -158,29 +162,31 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
 <div class="carousel bleed" id="demoCarousel" role="group" aria-roledescription="carousel" aria-label="Autoregressive decoding versus VFlash-FM, four clips">
   <div class="cviewport" id="cviewport" tabindex="0" aria-label="Demo clips. Move the pointer to either side to slide, drag, or use the arrow keys.">
     <div class="cstrip" id="cstrip">
-      <figure class="cslide" role="group" aria-label="Clip 1 of 4">
+      <figure class="cslide is-current" role="group" aria-label="Clip 1 of 4" aria-describedby="ccap1">
         <div class="videobox"><video controls playsinline preload="metadata" poster="assets/demo1_mvbench_plain_poster.jpg"><source src="assets/demo1_mvbench_plain.mp4" type="video/mp4"></video></div>
-        <figcaption><b>MVBench</b> · 9 s clip · <b>4.66×</b> decoding speedup · 6.67 tokens committed per cycle · identical output</figcaption>
       </figure>
-      <figure class="cslide" role="group" aria-label="Clip 2 of 4">
+      <figure class="cslide" role="group" aria-label="Clip 2 of 4" aria-describedby="ccap2">
         <div class="videobox"><video controls playsinline preload="metadata" poster="assets/demo2_vdc_plain_poster.jpg"><source src="assets/demo2_vdc_plain.mp4" type="video/mp4"></video></div>
-        <figcaption><b>VideoDetailCaption</b> · 111 s clip · <b>4.26×</b> decoding speedup · 6.08 tokens committed per cycle · identical output</figcaption>
       </figure>
-      <figure class="cslide" role="group" aria-label="Clip 3 of 4">
+      <figure class="cslide" role="group" aria-label="Clip 3 of 4" aria-describedby="ccap3">
         <div class="videobox"><video controls playsinline preload="metadata" poster="assets/demo3_vdc_plain_poster.jpg"><source src="assets/demo3_vdc_plain.mp4" type="video/mp4"></video></div>
-        <figcaption><b>VideoDetailCaption</b> · 72 s clip · <b>3.95×</b> decoding speedup · 5.89 tokens committed per cycle · identical output</figcaption>
       </figure>
-      <figure class="cslide" role="group" aria-label="Clip 4 of 4">
+      <figure class="cslide" role="group" aria-label="Clip 4 of 4" aria-describedby="ccap4">
         <div class="videobox"><video controls playsinline preload="metadata" poster="assets/demo4_vdc_plain_poster.jpg"><source src="assets/demo4_vdc_plain.mp4" type="video/mp4"></video></div>
-        <figcaption><b>VideoDetailCaption</b> · 84 s clip · <b>3.72×</b> decoding speedup · 5.45 tokens committed per cycle · identical output</figcaption>
       </figure>
     </div>
-    <div class="czone left" data-dir="-1" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></div>
+    <div class="czone left disabled" data-dir="-1" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></div>
     <div class="czone right" data-dir="1" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div>
+  </div>
+  <div class="ccaps" aria-live="polite">
+    <p class="ccap on" id="ccap1"><b>MVBench</b> · 9 s clip · <b>4.66×</b> decoding speedup · 6.67 tokens committed per cycle · identical output</p>
+    <p class="ccap" id="ccap2"><b>VideoDetailCaption</b> · 111 s clip · <b>4.26×</b> decoding speedup · 6.08 tokens committed per cycle · identical output</p>
+    <p class="ccap" id="ccap3"><b>VideoDetailCaption</b> · 72 s clip · <b>3.95×</b> decoding speedup · 5.89 tokens committed per cycle · identical output</p>
+    <p class="ccap" id="ccap4"><b>VideoDetailCaption</b> · 84 s clip · <b>3.72×</b> decoding speedup · 5.45 tokens committed per cycle · identical output</p>
   </div>
   <div class="cbar">
     <div class="cdots" aria-label="Choose a clip"></div>
-    <span class="ccount" aria-live="polite">1 / 4</span>
+    <span class="ccount">1 / 4</span>
   </div>
 </div>
 <p class="note">Decode time after prefill, recorded with the paper's evaluation harness: native grouped-query attention, preallocated KV caches, block 16, one drafter forward per block, greedy decoding. Autoregressive decoding measures 10.6 to 11.1 ms per token on these clips.</p>
@@ -394,33 +400,47 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
   var root = document.getElementById("demoCarousel"); if (!root) return;
   var vp = document.getElementById("cviewport"), strip = document.getElementById("cstrip");
   var slides = [].slice.call(strip.querySelectorAll(".cslide"));
+  var caps = [].slice.call(root.querySelectorAll(".ccap"));
   var zones = [].slice.call(root.querySelectorAll(".czone"));
   var dotsBox = root.querySelector(".cdots"), count = root.querySelector(".ccount");
   var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var n = slides.length, pos = 0, target = null, hoverDir = 0, hoverDepth = 0;
+  var n = slides.length, pos = 0, target = null, hoverDir = 0, hoverDepth = 0;   // pos is in clips: 0 .. n-1
   var armed = false, dragging = false, dragX0 = 0, dragY0 = 0, dragPos0 = 0, dragIdx0 = 0, dragTarget = null;
-  var idx = -1, raf = null, lastT = 0, wheelT = null, dots = [];
+  var idx = -1, raf = null, lastT = 0, wheelT = null, dots = [], P = {};
 
-  function gap(){ return parseFloat(getComputedStyle(strip).columnGap) || 16; }
-  function step(){ return slides[0].getBoundingClientRect().width + gap(); }
-  function maxPos(){ return (n - 1) * step(); }
-  function clamp(x){ return Math.max(0, Math.min(maxPos(), x)); }
-  function nearest(p){ return Math.max(0, Math.min(n - 1, Math.round(p / step()))); }
-  function speed(){ return 240 + 1300 * hoverDepth; }              // px/s: gentle at the inner edge, brisk at the outer edge
+  function readParams(){                                            // stage geometry lives in CSS custom properties
+    var cs = getComputedStyle(root);
+    function f(name, d){ var v = parseFloat(cs.getPropertyValue(name)); return isNaN(v) ? d : v; }
+    P = {W: vp.clientWidth, focus: f("--focus", 70) / 100, off: f("--off", .55), stack: f("--stack", .10),
+         rot: f("--rot", 48), depth: f("--depth", 260), depth2: f("--depth2", 90), scale: f("--scale", .85)};
+  }
+  function focusPx(){ return P.W * P.focus; }
+  function clamp(x){ return Math.max(0, Math.min(n - 1, x)); }
+  function nearest(p){ return Math.max(0, Math.min(n - 1, Math.round(p))); }
+  function speed(){ return 0.22 + 1.1 * hoverDepth; }              // clips per second: gentle inside, brisk at the edge
 
+  function pose(d){                                                 // Cover Flow: d = signed distance from centre, in clips
+    var a = Math.abs(d), sg = d < 0 ? -1 : 1, t = Math.min(1, a), ex = Math.max(0, a - 1);
+    var x = sg * (t * P.off + ex * P.stack) * P.W;                  // slide out to the side, then stack
+    var z = -(t * P.depth + ex * P.depth2);                          // and back into the stage
+    var r = sg * t * P.rot;                                         // turned toward the centre
+    var sc = 1 - t * (1 - P.scale) - ex * 0.04;
+    var op = 1 - t * 0.2 - Math.min(ex, 2) * 0.15;
+    return ["translate(-50%,-50%) translate3d(" + x.toFixed(1) + "px,0," + z.toFixed(1) + "px) rotateY(" + r.toFixed(2) + "deg) scale(" + sc.toFixed(3) + ")",
+            100 - Math.round(a * 10), op];
+  }
   function render(){
-    strip.style.transform = "translate3d(" + (-pos) + "px,0,0)";
-    var s = step();
-    slides.forEach(function(sl, i){ var d = Math.min(1, Math.abs(i * s - pos) / s); sl.style.opacity = (1 - 0.5 * d).toFixed(3); });
-    zones[0].classList.toggle("disabled", pos <= 1);
-    zones[1].classList.toggle("disabled", pos >= maxPos() - 1);
+    slides.forEach(function(sl, i){ var q = pose(i - pos); sl.style.transform = q[0]; sl.style.zIndex = q[1]; sl.style.opacity = q[2].toFixed(3); });
+    zones[0].classList.toggle("disabled", pos <= 0.01);
+    zones[1].classList.toggle("disabled", pos >= n - 1 - 0.01);
     var k = nearest(pos); if (k !== idx) setIdx(k);
   }
   function setIdx(k){
     idx = k;
     dots.forEach(function(d, j){ d.setAttribute("aria-current", j === k ? "true" : "false"); });
     count.textContent = (k + 1) + " / " + n;
-    slides.forEach(function(sl, j){                                 // only the centred clip is interactive; others pause
+    caps.forEach(function(c, j){ c.classList.toggle("on", j === k); });
+    slides.forEach(function(sl, j){                                 // only the front clip is interactive; others pause
       sl.classList.toggle("is-current", j === k);
       var v = sl.querySelector("video"); if (v && j !== k && !v.paused) v.pause();
     });
@@ -430,7 +450,7 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
     if (hoverDir && !dragging){ pos = clamp(pos + hoverDir * speed() * dt); }
     else if (!dragging && target !== null){
       var d = target - pos;
-      if (Math.abs(d) < 0.5){ pos = target; target = null; } else pos += d * (1 - Math.exp(-dt * 9));
+      if (Math.abs(d) < 0.0005){ pos = target; target = null; } else pos += d * (1 - Math.exp(-dt * 9));
     }
     render();
     if (hoverDir || target !== null || dragging) raf = requestAnimationFrame(tick); else { raf = null; lastT = 0; }
@@ -438,9 +458,9 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
   function run(){ if (raf === null){ lastT = 0; raf = requestAnimationFrame(tick); } }
   function goTo(k){
     k = Math.max(0, Math.min(n - 1, k)); hoverDir = 0;
-    if (reduce){ pos = k * step(); target = null; render(); } else { target = k * step(); run(); }
+    if (reduce){ pos = k; target = null; render(); } else { target = k; run(); }
   }
-  function settle(){ target = nearest(pos) * step(); run(); }
+  function settle(){ target = nearest(pos); run(); }
 
   slides.forEach(function(sl, i){
     var b = document.createElement("button"); b.className = "cdot"; b.type = "button";
@@ -449,7 +469,7 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
     dotsBox.appendChild(b); dots.push(b);
   });
 
-  // hover-to-scroll: resting the mouse on a side zone slides the reel that way; leaving it settles on the nearest clip
+  // hover-to-scroll: resting the mouse on a side of the stage turns the flow that way; leaving it settles on the nearest clip
   zones.forEach(function(z){
     var dir = +z.getAttribute("data-dir");
     function depth(e){ var r = z.getBoundingClientRect(), x = (e.clientX - r.left) / Math.max(1, r.width); return Math.max(0, Math.min(1, dir < 0 ? 1 - x : x)); }
@@ -476,24 +496,23 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
       try { vp.setPointerCapture(e.pointerId); } catch (_){}
       run();
     }
-    pos = clamp(dragPos0 - dx);
+    pos = clamp(dragPos0 - dx / focusPx());
   });
   function release(e){
     if (!armed) return; armed = false;
     if (dragging){
       dragging = false; vp.classList.remove("dragging");
       var dx = e.clientX - dragX0;
-      goTo(Math.abs(dx) > 0.12 * step() ? dragIdx0 + (dx < 0 ? 1 : -1) : nearest(pos));
-    } else if (dragTarget){ goTo(nearest(pos) + (+dragTarget.getAttribute("data-dir"))); }   // a plain click on a side zone steps one clip
+      goTo(Math.abs(dx) > 0.12 * focusPx() ? dragIdx0 + (dx < 0 ? 1 : -1) : nearest(pos));
+    } else if (dragTarget){ goTo(nearest(pos) + (+dragTarget.getAttribute("data-dir"))); }   // a plain click on a side steps one clip
     dragTarget = null;
   }
   vp.addEventListener("pointerup", release);
   vp.addEventListener("pointercancel", release);
 
-  // horizontal trackpad swipe
-  vp.addEventListener("wheel", function(e){
+  vp.addEventListener("wheel", function(e){                        // horizontal trackpad swipe
     if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
-    e.preventDefault(); hoverDir = 0; target = null; pos = clamp(pos + e.deltaX); render();
+    e.preventDefault(); hoverDir = 0; target = null; pos = clamp(pos + e.deltaX / focusPx()); render();
     clearTimeout(wheelT); wheelT = setTimeout(settle, 140);
   }, {passive: false});
 
@@ -505,7 +524,7 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
     else if (e.key === "End"){ e.preventDefault(); goTo(n - 1); }
   });
 
-  var rz; window.addEventListener("resize", function(){ clearTimeout(rz); rz = setTimeout(function(){ pos = Math.max(0, idx) * step(); target = null; render(); }, 80); });
-  render();
+  var rz; window.addEventListener("resize", function(){ clearTimeout(rz); rz = setTimeout(function(){ readParams(); render(); }, 80); });
+  readParams(); render();
 })();
 </script>
