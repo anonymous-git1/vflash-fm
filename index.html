@@ -7,6 +7,7 @@
   --green:#1f8a4c; --green-soft:#e3f2e8; --orange:#d8701c; --orange-soft:#fbeadb;
   --chip-dis:#eef1ef; --chip-dis-ink:#8a938f;
   --g1:#c2c9c6; --g2:#939c98; --g3:#5e6763;
+  --fm:#176B91; --ours-row:#FFF8DC;
   --display:"Bricolage Grotesque","Source Sans 3",system-ui,sans-serif;
   --body:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -19,6 +20,7 @@
     --green:#2fa862; --green-soft:#17301f; --orange:#e5872f; --orange-soft:#3a2614;
     --chip-dis:#232927; --chip-dis-ink:#8a948f;
     --g1:#3f4744; --g2:#68726d; --g3:#98a29d;
+    --fm:#2F8FBD; --ours-row:#2b2716;
     color-scheme:dark;
   }
 }
@@ -28,6 +30,7 @@
   --green:#2fa862; --green-soft:#17301f; --orange:#e5872f; --orange-soft:#3a2614;
   --chip-dis:#232927; --chip-dis-ink:#8a948f;
   --g1:#3f4744; --g2:#68726d; --g3:#98a29d;
+  --fm:#2F8FBD; --ours-row:#2b2716;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -90,7 +93,7 @@ table{border-collapse:collapse;width:100%;font-size:14.5px;font-variant-numeric:
 th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
 th{font-weight:600;color:var(--ink2);font-size:13px}
 th:first-child,td:first-child{text-align:left}
-tr.ours td{background:var(--green-soft);font-weight:600}
+tr.ours td{background:var(--ours-row);font-weight:600}
 tr:last-child td{border-bottom:none}
 .note{font-size:14px;color:var(--muted);margin-top:8px;max-width:80ch}
 footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
@@ -325,7 +328,7 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
     {name:"SpecVLM (0.5B)",     color:tok("--g1"), v:[1.83,1.82,1.77,1.76,1.86,1.81]},
     {name:"ParallelVLM (0.5B)", color:tok("--g2"), v:[2.12,2.06,2.15,2.14,2.10,2.11]},
     {name:"SPARROW",            color:tok("--g3"), v:[2.84,2.96,2.69,null,2.77,2.82]},
-    {name:"VFlash-FM, Tree-60", color:tok("--green"), v:[3.644,4.176,3.606,4.087,3.734,3.850], ours:true}
+    {name:"VFlash-FM, Tree-60", color:tok("--fm"), v:[3.644,4.176,3.606,4.087,3.734,3.850], ours:true}
   ];
   var svg = document.getElementById("svgBars"), tip = document.getElementById("tipBars"), chart = document.getElementById("chartBars");
   var W=860, H=360, L=44, R=12, T=14, B=44, pw=W-L-R, ph=H-T-B, ymax=4.5;
