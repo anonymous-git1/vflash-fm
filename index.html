@@ -1,0 +1,362 @@
+<title>VFlash-FM</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#f5f7f4; --surface:#ffffff; --ink:#151a18; --ink2:#4f5955; --muted:#7c8783;
+  --line:#e1e6e2; --grid:#e9ede9; --plate:#ffffff;
+  --green:#1f8a4c; --green-soft:#e3f2e8; --orange:#d8701c; --orange-soft:#fbeadb;
+  --chip-dis:#eef1ef; --chip-dis-ink:#8a938f;
+  --g1:#c2c9c6; --g2:#939c98; --g3:#5e6763;
+  --display:"Bricolage Grotesque","Source Sans 3",system-ui,sans-serif;
+  --body:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101412; --surface:#181d1a; --ink:#eef1ec; --ink2:#b7bfb9; --muted:#8a948f;
+    --line:#2a312d; --grid:#242b27; --plate:#ffffff;
+    --green:#2fa862; --green-soft:#17301f; --orange:#e5872f; --orange-soft:#3a2614;
+    --chip-dis:#232927; --chip-dis-ink:#8a948f;
+    --g1:#3f4744; --g2:#68726d; --g3:#98a29d;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101412; --surface:#181d1a; --ink:#eef1ec; --ink2:#b7bfb9; --muted:#8a948f;
+  --line:#2a312d; --grid:#242b27; --plate:#ffffff;
+  --green:#2fa862; --green-soft:#17301f; --orange:#e5872f; --orange-soft:#3a2614;
+  --chip-dis:#232927; --chip-dis-ink:#8a948f;
+  --g1:#3f4744; --g2:#68726d; --g3:#98a29d;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;
+  padding-inline:16px;padding-block:0 64px;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:900px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.1;text-wrap:balance;margin:0}
+h1{font-size:clamp(40px,7vw,64px);letter-spacing:-.02em}
+h2{font-size:clamp(24px,3.4vw,30px);margin-block:56px 12px;letter-spacing:-.01em}
+h3{font-size:19px;margin-block:22px 8px}
+p{margin-block:0 14px;max-width:70ch}
+.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+header{padding-block:48px 8px;text-align:center}
+header .sub{font-family:var(--display);font-weight:500;font-size:clamp(19px,2.6vw,24px);color:var(--ink2);margin:10px auto 0;max-width:34ch}
+header .authors{margin:18px 0 0;color:var(--ink2)}
+header .authors span{color:var(--muted)}
+.btns{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:22px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink);text-decoration:none;font-weight:600;font-size:15px}
+.btn:hover,.btn:focus-visible{border-color:var(--ink2);outline:none}
+.btn:focus-visible{box-shadow:0 0 0 3px var(--green-soft)}
+.btn.soon{color:var(--muted);border-style:dashed;cursor:default}
+.btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.strip{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin:34px 0 8px;border-radius:10px;overflow:hidden;background:var(--line);padding:4px}
+.strip img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:4px}
+.strip-cap{text-align:center;color:var(--muted);font-size:14px;margin-bottom:34px}
+.lede{font-size:20px;line-height:1.5;max-width:64ch;margin:0 auto 6px}
+.lede b{color:var(--green)}
+figure{margin:0}
+figcaption{font-size:14.5px;color:var(--ink2);line-height:1.5;margin-top:10px;max-width:80ch}
+.videobox{border-radius:12px;overflow:hidden;background:#000;border:1px solid var(--line)}
+.videobox video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.tile .lab{font-size:13px;color:var(--muted);letter-spacing:.02em}
+.tile .val{font-size:34px;font-weight:600;line-height:1.15;margin-top:2px}
+.tile .val small{font-size:16px;color:var(--ink2);font-weight:400;margin-left:4px}
+.tile .val .arrow{color:var(--muted);font-weight:400;margin:0 6px}
+.tile .note{font-size:13px;color:var(--ink2);margin-top:4px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13.5px;color:var(--ink2);margin-top:10px;align-items:center}
+.legend .k{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid transparent}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 16px 10px;position:relative}
+.chart .title{font-weight:600;margin:0 0 2px}
+.chart .subtitle{font-size:14px;color:var(--muted);margin:0 0 8px}
+.chart svg{display:block;width:100%;height:auto;font-family:var(--body)}
+.chart .axis text{fill:var(--muted);font-size:12px}
+.chart .grid line{stroke:var(--grid);stroke-width:1}
+.chart .base{stroke:var(--line);stroke-width:1}
+.chart .lbl{fill:var(--ink);font-size:12.5px;font-weight:600}
+.chart .cat{fill:var(--ink2);font-size:13px}
+.chart .nr{fill:var(--muted);font-size:11px}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:13px;line-height:1.35;padding:7px 10px;border-radius:8px;
+  transform:translate(-50%,calc(-100% - 10px));white-space:nowrap;opacity:0;transition:opacity .12s}
+.tip b{font-size:15px;display:block}
+.tip.on{opacity:1}
+details{margin-top:10px}
+summary{cursor:pointer;font-size:14px;color:var(--ink2);font-weight:600}
+summary:focus-visible{outline:2px solid var(--green);outline-offset:2px;border-radius:4px}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-top:10px}
+table{border-collapse:collapse;width:100%;font-size:14.5px;font-variant-numeric:tabular-nums}
+th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-weight:600;color:var(--ink2);font-size:13px}
+th:first-child,td:first-child{text-align:left}
+tr.ours td{background:var(--green-soft);font-weight:600}
+tr:last-child td{border-bottom:none}
+.note{font-size:14px;color:var(--muted);margin-top:8px;max-width:80ch}
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+@media (max-width:700px){
+  .tiles{grid-template-columns:1fr 1fr}
+  .strip{grid-template-columns:repeat(4,1fr)}
+  body{font-size:16px}
+}
+@media (max-width:440px){ .tiles{grid-template-columns:1fr} }
+@media (prefers-reduced-motion: reduce){ .tip{transition:none} }
+.diagram{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+.diagram svg{display:block;width:100%;min-width:860px;height:auto;font-family:var(--body);color:var(--ink)}
+.d-h{font-size:13px;font-weight:700;fill:var(--ink)} .d-h2{font-size:12px;font-weight:600;fill:var(--ink)} .d-sub{font-size:11px;fill:var(--muted)} .d-note{font-size:11.5px;fill:var(--ink2)}
+.d-box{fill:var(--surface);stroke:var(--ink2);stroke-width:1.2} .d-boxt{font-size:11px;fill:var(--ink);font-weight:600} .d-boxs{font-size:10px;fill:var(--ink2)}
+.d-green{fill:var(--green-soft);stroke:var(--green);stroke-width:1.5}
+.d-lbl{font-size:11px;fill:var(--ink2)}
+.d-tok{fill:var(--surface);stroke:var(--line);stroke-width:1} .d-tokt{font-size:10.5px;fill:var(--ink);font-family:var(--mono)}
+.d-anchor{fill:none;stroke:var(--line)} .d-anchort{font-size:10.5px;fill:var(--ink2);font-family:var(--mono)}
+.d-mask{fill:var(--chip-dis);stroke:none} .d-maskt{font-size:10px;fill:var(--muted);font-family:var(--mono)}
+.d-ok{fill:var(--green-soft);stroke:var(--green);stroke-width:1.2}
+.d-no{fill:var(--chip-dis);stroke:none} .d-not{font-size:10.5px;fill:var(--chip-dis-ink);font-family:var(--mono)} .d-strike{stroke:var(--chip-dis-ink);stroke-width:1.2}
+.d-fix{fill:var(--orange-soft);stroke:var(--orange);stroke-width:1.2}
+.d-arrow{stroke:var(--ink2);stroke-width:1.3;fill:none} .d-head{fill:var(--ink2)} .d-div{stroke:var(--line)}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">ICLR 2027 submission · under review</div>
+  <h1>VFlash-FM</h1>
+  <p class="sub">Flow-Trained One-Pass Drafting for Video Language Models</p>
+  <p class="authors">Anonymous authors <span>· withheld for double-blind review</span></p>
+  <div class="btns">
+    <span class="btn soon" title="Added after the review period"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/></svg>Paper</span>
+    <span class="btn soon" title="Added after the review period"><svg viewBox="0 0 24 24"><path d="M8 6l-6 6 6 6"/><path d="M16 6l6 6-6 6"/></svg>Code</span>
+    <a class="btn" href="#demo"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9z"/></svg>Demo</a>
+    <a class="btn" href="#how">How it works</a>
+    <a class="btn" href="#results">Results</a>
+  </div>
+</header>
+
+<div class="strip" aria-label="Eight frames from the demo clip">
+  <img src="assets/frame_00.jpg" alt=""><img src="assets/frame_01.jpg" alt=""><img src="assets/frame_02.jpg" alt=""><img src="assets/frame_03.jpg" alt="">
+  <img src="assets/frame_04.jpg" alt=""><img src="assets/frame_05.jpg" alt=""><img src="assets/frame_06.jpg" alt=""><img src="assets/frame_07.jpg" alt="">
+</div>
+<div class="strip-cap">The demo clip: 128 sampled frames become 25,119 prompt tokens for the target model.</div>
+
+<p class="lede"><b>VFlash-FM</b> speeds up video language models by proposing a whole block of 16 tokens in <b>one drafter forward</b>, which the unchanged target verifies in one pass. The drafter never processes the video: it reads the target's hidden states, and it is trained along a discrete flow from masks to the target's continuation instead of only at the all-mask start. On LLaVA-OneVision-7B this gives a <b>3.85×</b> macro-average decoding speedup across five video benchmarks.</p>
+
+<h2 id="demo">Side by side: autoregressive decoding vs VFlash-FM</h2>
+<p>Same clip, same prompt, same H100, played at a quarter of real time. The strip at the bottom right shows each verification cycle: the anchor, the 15 drafted tokens, and the target's correction.</p>
+<figure>
+  <div class="videobox">
+    <video id="demoVideo" controls playsinline preload="metadata" poster="assets/demo_poster.jpg">
+      <source src="assets/demo_ar_vs_vflashfm.mp4" type="video/mp4">
+    </video>
+  </div>
+  <figcaption>Decode time after prefill, recorded with the paper's evaluation harness. Both outputs are the target's own greedy captions.</figcaption>
+</figure>
+<div class="tiles">
+  <div class="tile"><div class="lab">Decoding speed on this clip</div><div class="val">93<span class="arrow">→</span>309<small>tokens / s</small></div><div class="note">383 tokens in 4.11 s vs 361 tokens in 1.17 s</div></div>
+  <div class="tile"><div class="lab">Decoding speedup on this clip</div><div class="val">3.32<small>×</small></div><div class="note">one recorded run; the protocol run measured 3.50× on the same clip</div></div>
+  <div class="tile"><div class="lab">Committed tokens per cycle</div><div class="val">4.93</div><div class="note">each cycle is one drafter forward plus one target verification, about 16 ms</div></div>
+</div>
+
+<h2 id="how">How VFlash-FM works</h2>
+<p>The drafter never processes the video. It reads the hidden states the frozen target has already computed for every context position, proposes a whole block of 15 tokens in one forward, and the unchanged target verifies the block in one forward. Whatever is accepted is exactly what the target would have generated on its own.</p>
+<figure>
+  <div class="diagram">
+<svg viewBox="0 0 960 524" role="img" aria-label="Autoregressive decoding needs one target forward per token. VFlash-FM proposes a block of 15 tokens with one drafter forward from the target's cached hidden states, the target verifies the block in one forward, and the accepted prefix plus the correction is committed.">
+<defs><marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" class="d-head"/></marker></defs>
+<text x="10" y="52" class="d-h">Autoregressive</text><text x="10" y="70" class="d-sub">one target forward per token</text>
+<rect x="185" y="34" width="76" height="28" rx="6" class="d-box"/><text x="223" y="52" text-anchor="middle" class="d-boxt">target 7B</text>
+<line x1="223" y1="63" x2="223" y2="77" class="d-arrow" marker-end="url(#arr)"/>
+<rect x="193" y="80" width="60" height="24" rx="6" class="d-tok"/><text x="223" y="96" text-anchor="middle" class="d-tokt">less</text>
+<rect x="277" y="34" width="76" height="28" rx="6" class="d-box"/><text x="315" y="52" text-anchor="middle" class="d-boxt">target 7B</text>
+<line x1="315" y1="63" x2="315" y2="77" class="d-arrow" marker-end="url(#arr)"/>
+<rect x="285" y="80" width="60" height="24" rx="6" class="d-tok"/><text x="315" y="96" text-anchor="middle" class="d-tokt">top</text>
+<rect x="369" y="34" width="76" height="28" rx="6" class="d-box"/><text x="407" y="52" text-anchor="middle" class="d-boxt">target 7B</text>
+<line x1="407" y1="63" x2="407" y2="77" class="d-arrow" marker-end="url(#arr)"/>
+<rect x="377" y="80" width="60" height="24" rx="6" class="d-tok"/><text x="407" y="96" text-anchor="middle" class="d-tokt">and</text>
+<rect x="461" y="34" width="76" height="28" rx="6" class="d-box"/><text x="499" y="52" text-anchor="middle" class="d-boxt">target 7B</text>
+<line x1="499" y1="63" x2="499" y2="77" class="d-arrow" marker-end="url(#arr)"/>
+<rect x="469" y="80" width="60" height="24" rx="6" class="d-tok"/><text x="499" y="96" text-anchor="middle" class="d-tokt">black</text>
+<rect x="553" y="34" width="76" height="28" rx="6" class="d-box"/><text x="591" y="52" text-anchor="middle" class="d-boxt">target 7B</text>
+<line x1="591" y1="63" x2="591" y2="77" class="d-arrow" marker-end="url(#arr)"/>
+<rect x="561" y="80" width="60" height="24" rx="6" class="d-tok"/><text x="591" y="96" text-anchor="middle" class="d-tokt">pants</text>
+<rect x="645" y="34" width="76" height="28" rx="6" class="d-box"/><text x="683" y="52" text-anchor="middle" class="d-boxt">target 7B</text>
+<line x1="683" y1="63" x2="683" y2="77" class="d-arrow" marker-end="url(#arr)"/>
+<rect x="653" y="80" width="60" height="24" rx="6" class="d-tok"/><text x="683" y="96" text-anchor="middle" class="d-tokt">,</text>
+<rect x="737" y="34" width="76" height="28" rx="6" class="d-box"/><text x="775" y="52" text-anchor="middle" class="d-boxt">target 7B</text>
+<line x1="775" y1="63" x2="775" y2="77" class="d-arrow" marker-end="url(#arr)"/>
+<rect x="745" y="80" width="60" height="24" rx="6" class="d-tok"/><text x="775" y="96" text-anchor="middle" class="d-tokt">stands</text>
+<rect x="829" y="34" width="76" height="28" rx="6" class="d-box"/><text x="867" y="52" text-anchor="middle" class="d-boxt">target 7B</text>
+<line x1="867" y1="63" x2="867" y2="77" class="d-arrow" marker-end="url(#arr)"/>
+<rect x="837" y="80" width="60" height="24" rx="6" class="d-tok"/><text x="867" y="96" text-anchor="middle" class="d-tokt">in</text>
+<text x="185" y="128" class="d-note">8 tokens = 8 target forwards, each over the full 25,119-token context (10.7 ms each on the demo clip)</text>
+<line x1="10" y1="150" x2="950" y2="150" class="d-div"/>
+<text x="10" y="186" class="d-h">VFlash-FM</text><text x="10" y="204" class="d-sub">one drafter forward + one target forward per block of 16</text>
+<rect x="185" y="262" width="92" height="52" rx="8" class="d-box"/>
+<text x="231.0" y="284" text-anchor="middle" class="d-boxt">video +</text><text x="231.0" y="300" text-anchor="middle" class="d-boxs">prompt</text>
+<line x1="279" y1="288" x2="314" y2="288" class="d-arrow" marker-end="url(#arr)"/>
+<text x="296.5" y="254" text-anchor="middle" class="d-lbl">prefill once</text>
+<rect x="318" y="262" width="126" height="52" rx="8" class="d-box"/>
+<text x="381.0" y="284" text-anchor="middle" class="d-boxt">frozen target 7B</text><text x="381.0" y="300" text-anchor="middle" class="d-boxs">hidden states cached</text>
+<line x1="446" y1="288" x2="482" y2="288" class="d-arrow" marker-end="url(#arr)"/>
+<text x="464.0" y="254" text-anchor="middle" class="d-lbl">hidden states</text>
+<rect x="486" y="262" width="84" height="52" rx="8" class="d-box"/>
+<text x="528.0" y="284" text-anchor="middle" class="d-boxt">linear</text><text x="528.0" y="300" text-anchor="middle" class="d-boxs">projector</text>
+<line x1="572" y1="288" x2="606" y2="288" class="d-arrow" marker-end="url(#arr)"/>
+<text x="589.0" y="254" text-anchor="middle" class="d-lbl">keys &amp; values</text>
+<rect x="610" y="262" width="112" height="52" rx="8" class="d-green"/>
+<text x="666.0" y="284" text-anchor="middle" class="d-boxt">drafter</text><text x="666.0" y="300" text-anchor="middle" class="d-boxs">4 layers</text>
+<text x="508" y="206" class="d-lbl">block in: anchor + 15 masks</text>
+<rect x="508" y="214" width="46" height="22" rx="4" class="d-anchor"/><text x="531" y="229" text-anchor="middle" class="d-anchort">sleeve</text>
+<rect x="556" y="214" width="16" height="22" rx="4" class="d-mask"/><text x="564" y="229" text-anchor="middle" class="d-maskt">M</text>
+<rect x="574" y="214" width="16" height="22" rx="4" class="d-mask"/><text x="582" y="229" text-anchor="middle" class="d-maskt">M</text>
+<rect x="592" y="214" width="16" height="22" rx="4" class="d-mask"/><text x="600" y="229" text-anchor="middle" class="d-maskt">M</text>
+<rect x="610" y="214" width="16" height="22" rx="4" class="d-mask"/><text x="618" y="229" text-anchor="middle" class="d-maskt">M</text>
+<rect x="628" y="214" width="16" height="22" rx="4" class="d-mask"/><text x="636" y="229" text-anchor="middle" class="d-maskt">M</text>
+<rect x="646" y="214" width="16" height="22" rx="4" class="d-mask"/><text x="654" y="229" text-anchor="middle" class="d-maskt">M</text>
+<rect x="664" y="214" width="16" height="22" rx="4" class="d-mask"/><text x="672" y="229" text-anchor="middle" class="d-maskt">M</text>
+<rect x="682" y="214" width="16" height="22" rx="4" class="d-mask"/><text x="690" y="229" text-anchor="middle" class="d-maskt">M</text>
+<rect x="700" y="214" width="16" height="22" rx="4" class="d-mask"/><text x="708" y="229" text-anchor="middle" class="d-maskt">M</text>
+<rect x="718" y="214" width="16" height="22" rx="4" class="d-mask"/><text x="726" y="229" text-anchor="middle" class="d-maskt">M</text>
+<rect x="736" y="214" width="16" height="22" rx="4" class="d-mask"/><text x="744" y="229" text-anchor="middle" class="d-maskt">M</text>
+<rect x="754" y="214" width="16" height="22" rx="4" class="d-mask"/><text x="762" y="229" text-anchor="middle" class="d-maskt">M</text>
+<rect x="772" y="214" width="16" height="22" rx="4" class="d-mask"/><text x="780" y="229" text-anchor="middle" class="d-maskt">M</text>
+<rect x="790" y="214" width="16" height="22" rx="4" class="d-mask"/><text x="798" y="229" text-anchor="middle" class="d-maskt">M</text>
+<rect x="808" y="214" width="16" height="22" rx="4" class="d-mask"/><text x="816" y="229" text-anchor="middle" class="d-maskt">M</text>
+<line x1="666" y1="238" x2="666" y2="258" class="d-arrow" marker-end="url(#arr)"/>
+<text x="10" y="357" class="d-h2">proposed</text><text x="10" y="373" class="d-sub">one drafter forward</text>
+<line x1="666" y1="316" x2="666" y2="346" class="d-arrow" marker-end="url(#arr)"/><text x="674" y="334" class="d-lbl">one forward</text>
+<rect x="185" y="350" width="46" height="22" rx="4" class="d-anchor"/><text x="208" y="365" text-anchor="middle" class="d-anchort">sleeve</text>
+<rect x="234" y="350" width="34" height="22" rx="4" class="d-tok"/><text x="251.0" y="365" text-anchor="middle" class="d-tokt">less</text>
+<rect x="271" y="350" width="28" height="22" rx="4" class="d-tok"/><text x="285.0" y="365" text-anchor="middle" class="d-tokt">top</text>
+<rect x="302" y="350" width="28" height="22" rx="4" class="d-tok"/><text x="316.0" y="365" text-anchor="middle" class="d-tokt">and</text>
+<rect x="333" y="350" width="40" height="22" rx="4" class="d-tok"/><text x="353.0" y="365" text-anchor="middle" class="d-tokt">black</text>
+<rect x="376" y="350" width="40" height="22" rx="4" class="d-tok"/><text x="396.0" y="365" text-anchor="middle" class="d-tokt">pants</text>
+<rect x="419" y="350" width="16" height="22" rx="4" class="d-tok"/><text x="427.0" y="365" text-anchor="middle" class="d-tokt">,</text>
+<rect x="438" y="350" width="46" height="22" rx="4" class="d-tok"/><text x="461.0" y="365" text-anchor="middle" class="d-tokt">stands</text>
+<rect x="487" y="350" width="46" height="22" rx="4" class="d-tok"/><text x="510.0" y="365" text-anchor="middle" class="d-tokt">stands</text>
+<rect x="536" y="350" width="58" height="22" rx="4" class="d-tok"/><text x="565.0" y="365" text-anchor="middle" class="d-tokt">standing</text>
+<rect x="597" y="350" width="28" height="22" rx="4" class="d-tok"/><text x="611.0" y="365" text-anchor="middle" class="d-tokt">the</text>
+<rect x="628" y="350" width="22" height="22" rx="4" class="d-tok"/><text x="639.0" y="365" text-anchor="middle" class="d-tokt">el</text>
+<rect x="653" y="350" width="40" height="22" rx="4" class="d-tok"/><text x="673.0" y="365" text-anchor="middle" class="d-tokt">horse</text>
+<rect x="696" y="350" width="40" height="22" rx="4" class="d-tok"/><text x="716.0" y="365" text-anchor="middle" class="d-tokt">horse</text>
+<rect x="739" y="350" width="16" height="22" rx="4" class="d-tok"/><text x="747.0" y="365" text-anchor="middle" class="d-tokt">,</text>
+<rect x="758" y="350" width="16" height="22" rx="4" class="d-tok"/><text x="766.0" y="365" text-anchor="middle" class="d-tokt">,</text>
+<line x1="777" y1="361" x2="808" y2="361" class="d-arrow" marker-end="url(#arr)"/>
+<rect x="812" y="335" width="138" height="52" rx="8" class="d-box"/>
+<text x="881.0" y="357" text-anchor="middle" class="d-boxt">frozen target 7B</text><text x="881.0" y="373" text-anchor="middle" class="d-boxs">verifies in one forward</text>
+<text x="10" y="425" class="d-h2">verified</text><text x="10" y="441" class="d-sub">one target forward</text>
+<rect x="185" y="418" width="46" height="22" rx="4" class="d-anchor"/><text x="208" y="433" text-anchor="middle" class="d-anchort">sleeve</text>
+<rect x="234" y="418" width="34" height="22" rx="4" class="d-ok"/><text x="251.0" y="433" text-anchor="middle" class="d-tokt">less</text>
+<rect x="271" y="418" width="28" height="22" rx="4" class="d-ok"/><text x="285.0" y="433" text-anchor="middle" class="d-tokt">top</text>
+<rect x="302" y="418" width="28" height="22" rx="4" class="d-ok"/><text x="316.0" y="433" text-anchor="middle" class="d-tokt">and</text>
+<rect x="333" y="418" width="40" height="22" rx="4" class="d-ok"/><text x="353.0" y="433" text-anchor="middle" class="d-tokt">black</text>
+<rect x="376" y="418" width="40" height="22" rx="4" class="d-ok"/><text x="396.0" y="433" text-anchor="middle" class="d-tokt">pants</text>
+<rect x="419" y="418" width="16" height="22" rx="4" class="d-ok"/><text x="427.0" y="433" text-anchor="middle" class="d-tokt">,</text>
+<rect x="438" y="418" width="46" height="22" rx="4" class="d-ok"/><text x="461.0" y="433" text-anchor="middle" class="d-tokt">stands</text>
+<rect x="487" y="418" width="46" height="22" rx="4" class="d-no"/><text x="510.0" y="433" text-anchor="middle" class="d-not">stands</text>
+<line x1="492" y1="429" x2="528" y2="429" class="d-strike"/>
+<rect x="536" y="418" width="58" height="22" rx="4" class="d-no"/><text x="565.0" y="433" text-anchor="middle" class="d-not">standing</text>
+<line x1="541" y1="429" x2="589" y2="429" class="d-strike"/>
+<rect x="597" y="418" width="28" height="22" rx="4" class="d-no"/><text x="611.0" y="433" text-anchor="middle" class="d-not">the</text>
+<line x1="602" y1="429" x2="620" y2="429" class="d-strike"/>
+<rect x="628" y="418" width="22" height="22" rx="4" class="d-no"/><text x="639.0" y="433" text-anchor="middle" class="d-not">el</text>
+<line x1="633" y1="429" x2="645" y2="429" class="d-strike"/>
+<rect x="653" y="418" width="40" height="22" rx="4" class="d-no"/><text x="673.0" y="433" text-anchor="middle" class="d-not">horse</text>
+<line x1="658" y1="429" x2="688" y2="429" class="d-strike"/>
+<rect x="696" y="418" width="40" height="22" rx="4" class="d-no"/><text x="716.0" y="433" text-anchor="middle" class="d-not">horse</text>
+<line x1="701" y1="429" x2="731" y2="429" class="d-strike"/>
+<rect x="739" y="418" width="16" height="22" rx="4" class="d-no"/><text x="747.0" y="433" text-anchor="middle" class="d-not">,</text>
+<line x1="744" y1="429" x2="750" y2="429" class="d-strike"/>
+<rect x="758" y="418" width="16" height="22" rx="4" class="d-no"/><text x="766.0" y="433" text-anchor="middle" class="d-not">,</text>
+<line x1="763" y1="429" x2="769" y2="429" class="d-strike"/>
+<text x="780" y="433" class="d-lbl">→</text>
+<rect x="792" y="418" width="26" height="22" rx="4" class="d-fix"/><text x="805" y="433" text-anchor="middle" class="d-tokt">in</text>
+<path d="M881,389 V429 H822" class="d-arrow" marker-end="url(#arr)"/>
+<text x="10" y="493" class="d-h2">committed</text><text x="10" y="509" class="d-sub">8 tokens this cycle</text>
+<line x1="300" y1="443" x2="300" y2="482" class="d-arrow" marker-end="url(#arr)"/><text x="310" y="466" class="d-lbl">accepted prefix + the target's correction; the rest is discarded</text>
+<rect x="185" y="486" width="46" height="22" rx="4" class="d-anchor"/><text x="208" y="501" text-anchor="middle" class="d-anchort">sleeve</text>
+<rect x="234" y="486" width="34" height="22" rx="4" class="d-ok"/><text x="251.0" y="501" text-anchor="middle" class="d-tokt">less</text>
+<rect x="271" y="486" width="28" height="22" rx="4" class="d-ok"/><text x="285.0" y="501" text-anchor="middle" class="d-tokt">top</text>
+<rect x="302" y="486" width="28" height="22" rx="4" class="d-ok"/><text x="316.0" y="501" text-anchor="middle" class="d-tokt">and</text>
+<rect x="333" y="486" width="40" height="22" rx="4" class="d-ok"/><text x="353.0" y="501" text-anchor="middle" class="d-tokt">black</text>
+<rect x="376" y="486" width="40" height="22" rx="4" class="d-ok"/><text x="396.0" y="501" text-anchor="middle" class="d-tokt">pants</text>
+<rect x="419" y="486" width="16" height="22" rx="4" class="d-ok"/><text x="427.0" y="501" text-anchor="middle" class="d-tokt">,</text>
+<rect x="438" y="486" width="46" height="22" rx="4" class="d-ok"/><text x="461.0" y="501" text-anchor="middle" class="d-tokt">stands</text>
+<rect x="487" y="486" width="26" height="22" rx="4" class="d-fix"/><text x="500" y="501" text-anchor="middle" class="d-tokt">in</text>
+<text x="525" y="501" class="d-lbl">the next cycle starts from “in” as its anchor</text>
+</svg>
+  </div>
+  <figcaption>One real cycle from the demo clip. The drafter reads the target's cached hidden states through a linear projector and fills a block of masks in one forward. The target then scores all 16 tokens in one forward: the prefix that matches its own greedy choice is accepted (green), it supplies the token at the first disagreement (orange), and the rest is discarded. Here 7 drafts were accepted, so 2 forwards committed 8 tokens where autoregressive decoding needs 8 target forwards.</figcaption>
+</figure>
+
+<p>Training is what gives the drafter its early-block accuracy. The masked block is treated as the state of a discrete flow that starts from all masks and ends at the target's continuation, and the same network is also supervised at partially revealed blocks that its own reveal rounds produce, with revealed tokens that may be wrong, while the loss always points at the target's continuation. It learns to keep what it was right about, overwrite what it was wrong about, and predict the rest. Deployment stays a single forward from masks, so the training adds nothing to decode time.</p>
+
+<h2 id="results">Decoding speedup over autoregressive decoding</h2>
+<div class="chart" id="chartBars">
+  <p class="title">LLaVA-OneVision-7B, five video benchmarks</p>
+  <p class="subtitle">Fastest listed variant of each method. Baselines are the published numbers of each study on its own hardware and protocol; ours are three locked draws of 50 clips per benchmark on one H100, greedy, block 16, one drafter forward per block.</p>
+  <svg id="svgBars" viewBox="0 0 860 360" role="img" aria-label="Grouped bars of decoding speedup per benchmark for four methods"></svg>
+  <div class="legend" id="legendBars"></div>
+  <div class="tip" id="tipBars"></div>
+  <details>
+    <summary>Values as a table</summary>
+    <div class="tblwrap"><table>
+    <thead><tr><th>Method</th><th>VDC</th><th>Video-MME</th><th>MVBench</th><th>MLVU</th><th>LVB</th><th>Macro avg.</th></tr></thead>
+    <tbody>
+    <tr><td>SpecVLM (0.5B drafter)</td><td>1.83</td><td>1.82</td><td>1.77</td><td>1.76</td><td>1.86</td><td>1.81</td></tr>
+    <tr><td>ParallelVLM (0.5B drafter)</td><td>2.12</td><td>2.06</td><td>2.15</td><td>2.14</td><td>2.10</td><td>2.11</td></tr>
+    <tr><td>SPARROW (learned drafter)</td><td>2.84</td><td>2.96</td><td>2.69</td><td>not reported</td><td>2.77</td><td>2.82</td></tr>
+    <tr class="ours"><td>VFlash-FM, Tree-60</td><td>3.644</td><td>4.176</td><td>3.606</td><td>4.087</td><td>3.734</td><td>3.850</td></tr>
+    </tbody></table></div>
+  </details>
+</div>
+<p class="note">VDC: VideoDetailCaption; LVB: LongVideoBench. With chain verification VFlash-FM reaches 3.773× macro on the same benchmarks. On Qwen2.5-VL-7B, a separately trained drafter with the same recipe reaches 2.442× macro with Tree-60.</p>
+
+
+
+<footer>Project page for an anonymous ICLR 2027 submission.</footer>
+</div>
+
+<script>
+(function(){
+  var css = getComputedStyle(document.documentElement);
+  function tok(n){ return css.getPropertyValue(n).trim(); }
+  var NS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs, parent){ var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+  var benches = ["VDC","Video-MME","MVBench","MLVU","LVB","Macro avg."];
+  var series = [
+    {name:"SpecVLM (0.5B)",     color:tok("--g1"), v:[1.83,1.82,1.77,1.76,1.86,1.81]},
+    {name:"ParallelVLM (0.5B)", color:tok("--g2"), v:[2.12,2.06,2.15,2.14,2.10,2.11]},
+    {name:"SPARROW",            color:tok("--g3"), v:[2.84,2.96,2.69,null,2.77,2.82]},
+    {name:"VFlash-FM, Tree-60", color:tok("--green"), v:[3.644,4.176,3.606,4.087,3.734,3.850], ours:true}
+  ];
+  var svg = document.getElementById("svgBars"), tip = document.getElementById("tipBars"), chart = document.getElementById("chartBars");
+  var W=860, H=360, L=44, R=12, T=14, B=44, pw=W-L-R, ph=H-T-B, ymax=4.5;
+  var y = function(v){ return T + ph - (v/ymax)*ph; };
+  var g = el("g",{"class":"grid"},svg);
+  for (var t=1;t<=4;t++){ el("line",{x1:L,x2:W-R,y1:y(t),y2:y(t)},g); }
+  var ax = el("g",{"class":"axis"},svg);
+  for (var t2=0;t2<=4;t2++){ var tx=el("text",{x:L-8,y:y(t2)+4,"text-anchor":"end"},ax); tx.textContent = t2+"×"; }
+  el("line",{"class":"base",x1:L,x2:W-R,y1:y(0),y2:y(0)},svg);
+  var gw = pw/benches.length, bw=22, gap=2, n=series.length, block = n*bw+(n-1)*gap;
+  benches.forEach(function(b,i){
+    var x0 = L + gw*i + (gw-block)/2;
+    var c = el("text",{"class":"cat",x:L+gw*i+gw/2,y:H-16,"text-anchor":"middle"},svg); c.textContent=b;
+    series.forEach(function(s,j){
+      var x = x0 + j*(bw+gap), v = s.v[i];
+      if (v==null){ var nr=el("text",{"class":"nr",x:x+bw/2,y:y(0)-6,"text-anchor":"middle"},svg); nr.textContent="NR"; return; }
+      var h = y(0)-y(v), r = Math.min(4, h);
+      var d = "M"+x+","+y(0)+" v"+(-(h-r))+" a"+r+","+r+" 0 0 1 "+r+","+(-r)+" h"+(bw-2*r)+" a"+r+","+r+" 0 0 1 "+r+","+r+" v"+(h-r)+" z";
+      el("path",{d:d,fill:s.color},svg);
+      if (s.ours){ var lb=el("text",{"class":"lbl",x:x+bw/2,y:y(v)-6,"text-anchor":"middle"},svg); lb.textContent=v.toFixed(2)+"×"; }
+      var hit = el("rect",{x:x-2,y:T,width:bw+4,height:ph,fill:"transparent",tabindex:"0"},svg);
+      function show(){ tip.innerHTML=""; var bb=document.createElement("b"); bb.textContent=v.toFixed(v>=3?3:2)+"×"; tip.appendChild(bb); tip.appendChild(document.createTextNode(s.name+" · "+b));
+        var cr=chart.getBoundingClientRect(), sr=svg.getBoundingClientRect(), sx=sr.width/W; tip.style.left=(sr.left-cr.left+(x+bw/2)*sx)+"px"; tip.style.top=(sr.top-cr.top+y(v)*sx)+"px"; tip.classList.add("on"); }
+      function hide(){ tip.classList.remove("on"); }
+      hit.addEventListener("mouseenter",show); hit.addEventListener("mouseleave",hide); hit.addEventListener("focus",show); hit.addEventListener("blur",hide);
+    });
+  });
+  var lg = document.getElementById("legendBars");
+  series.forEach(function(s){ var sp=document.createElement("span"); var k=document.createElement("span"); k.className="k"; k.style.background=s.color; sp.appendChild(k); sp.appendChild(document.createTextNode(s.name)); lg.appendChild(sp); });
+})();
+</script>
