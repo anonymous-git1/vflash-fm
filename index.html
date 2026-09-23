@@ -58,21 +58,24 @@ header .sub{font-family:var(--display);font-weight:500;font-size:clamp(20px,2.8v
 figure{margin:0}
 figcaption{font-size:16px;color:var(--ink2);line-height:1.5;margin-top:10px;max-width:80ch}
 .bleed{width:min(1240px,calc(100vw - 48px));margin-left:50%;transform:translateX(-50%)}
-.carousel{margin-top:10px}
-.carousel.bleed{width:min(1240px,calc(100vw - 48px),calc((100vh - 230px) * 16 / 9))}
-.ctrack{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
-  scrollbar-width:none;-ms-overflow-style:none;border-radius:12px}
-.ctrack::-webkit-scrollbar{display:none}
-.ctrack:focus-visible{outline:2px solid var(--fm);outline-offset:4px}
-.cslide{flex:0 0 100%;min-width:0;scroll-snap-align:center}
+.carousel{margin-top:10px;--peek:9%;--gap:16px}
+.carousel.bleed{width:min(1400px,calc(100vw - 48px),calc((100vh - 230px) * 16 / 9 / 0.82))}
+.cviewport{position:relative;overflow:hidden;border-radius:12px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.cviewport.dragging{cursor:grabbing}
+.cviewport:focus-visible{outline:2px solid var(--fm);outline-offset:4px}
+.cstrip{display:flex;gap:var(--gap);padding-inline:var(--peek);will-change:transform}
+.cslide{flex:0 0 100%;min-width:0}
+.cslide:not(.is-current) video{pointer-events:none}
 .cslide figcaption{margin-top:12px;text-align:center;max-width:none}
+.czone{position:absolute;top:0;bottom:0;width:var(--peek);z-index:3;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:opacity .2s}
+.czone.left{left:0;background:linear-gradient(to right,rgba(16,20,18,.30),rgba(16,20,18,0))}
+.czone.right{right:0;background:linear-gradient(to left,rgba(16,20,18,.30),rgba(16,20,18,0))}
+.czone svg{width:42px;height:42px;fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;
+  opacity:.6;transition:opacity .15s,transform .15s;filter:drop-shadow(0 1px 3px rgba(0,0,0,.55))}
+.czone:hover svg{opacity:1;transform:scale(1.1)}
+.czone.disabled{opacity:0;pointer-events:none}
 .cbar{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:14px;flex-wrap:wrap}
-.cnav{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);
-  background:var(--surface);color:var(--ink);cursor:pointer;padding:0}
-.cnav:hover:not(:disabled){border-color:var(--ink2)}
-.cnav:focus-visible{outline:2px solid var(--fm);outline-offset:2px}
-.cnav:disabled{opacity:.35;cursor:default}
-.cnav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .cdots{display:flex;align-items:center;gap:9px}
 .cdot{width:10px;height:10px;border-radius:50%;background:var(--line);border:none;padding:0;cursor:pointer;
   transition:width .18s,background .18s}
@@ -113,10 +116,10 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
 @media (max-width:700px){
   body{font-size:17px}
   .bleed,.carousel.bleed{width:100%;margin-left:0;transform:none}
-  .cnav{width:40px;height:40px}
-  .cbar{gap:10px}
+  .carousel{--peek:0%;--gap:12px}
+  .czone{display:none}
 }
-@media (prefers-reduced-motion: reduce){ .tip{transition:none} .cdot{transition:none} .ctrack{scroll-behavior:auto} }
+@media (prefers-reduced-motion: reduce){ .tip{transition:none} .cdot{transition:none} .czone svg{transition:none} }
 .diagram{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
 .diagram svg{display:block;width:100%;min-width:860px;height:auto;font-family:var(--body);color:var(--ink)}
 .d-h{font-size:16px;font-weight:700;fill:var(--ink)} .d-h2{font-size:15px;font-weight:600;fill:var(--ink)} .d-sub{font-size:13px;fill:var(--muted)} .d-note{font-size:13.5px;fill:var(--ink2)}
@@ -150,30 +153,32 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
 <p class="lede"><b>VFlash-FM</b> speeds up video language models by proposing a whole block of 16 tokens in <b>one drafter forward</b>, which the unchanged target verifies in one pass. The drafter never processes the video: it reads the target's hidden states, and it is trained along a discrete flow from masks to the target's continuation instead of only at the all-mask start. On LLaVA-OneVision-7B this gives a <b>3.85×</b> macro-average decoding speedup across five video benchmarks.</p>
 
 <h2 id="demo">Side by side: autoregressive decoding vs VFlash-FM</h2>
-<p>Four clips, each decoded twice on the same H100 and played back at a quarter of real time. The clip plays above its prompt while both decoders write. In all four the VFlash-FM output is identical to the autoregressive output, token for token, so the panels differ only in how fast they fill. One clip at a time, full width, so the text stays readable: swipe, drag, or use the arrow keys.</p>
+<p>Four clips, each decoded twice on the same H100 and played back at a quarter of real time. The clip plays above its prompt while both decoders write. In all four the VFlash-FM output is identical to the autoregressive output, token for token, so the panels differ only in how fast they fill. One clip at a time, large enough to read: rest the pointer on either side of the clip and the reel slides that way on its own, faster the further out you go; dragging, swiping, and the arrow keys work too.</p>
 <div class="carousel bleed" id="demoCarousel" role="group" aria-roledescription="carousel" aria-label="Autoregressive decoding versus VFlash-FM, four clips">
-  <div class="ctrack" id="ctrack" tabindex="0" aria-label="Demo clips; scroll or use the arrow keys">
-    <figure class="cslide" role="group" aria-label="Clip 1 of 4">
-      <div class="videobox"><video controls playsinline preload="metadata" poster="assets/demo1_mvbench_plain_poster.jpg"><source src="assets/demo1_mvbench_plain.mp4" type="video/mp4"></video></div>
-      <figcaption><b>MVBench</b> · 9 s clip · <b>4.66×</b> decoding speedup · 6.67 tokens committed per cycle · identical output</figcaption>
-    </figure>
-    <figure class="cslide" role="group" aria-label="Clip 2 of 4">
-      <div class="videobox"><video controls playsinline preload="metadata" poster="assets/demo2_vdc_plain_poster.jpg"><source src="assets/demo2_vdc_plain.mp4" type="video/mp4"></video></div>
-      <figcaption><b>VideoDetailCaption</b> · 111 s clip · <b>4.26×</b> decoding speedup · 6.08 tokens committed per cycle · identical output</figcaption>
-    </figure>
-    <figure class="cslide" role="group" aria-label="Clip 3 of 4">
-      <div class="videobox"><video controls playsinline preload="metadata" poster="assets/demo3_vdc_plain_poster.jpg"><source src="assets/demo3_vdc_plain.mp4" type="video/mp4"></video></div>
-      <figcaption><b>VideoDetailCaption</b> · 72 s clip · <b>3.95×</b> decoding speedup · 5.89 tokens committed per cycle · identical output</figcaption>
-    </figure>
-    <figure class="cslide" role="group" aria-label="Clip 4 of 4">
-      <div class="videobox"><video controls playsinline preload="metadata" poster="assets/demo4_vdc_plain_poster.jpg"><source src="assets/demo4_vdc_plain.mp4" type="video/mp4"></video></div>
-      <figcaption><b>VideoDetailCaption</b> · 84 s clip · <b>3.72×</b> decoding speedup · 5.45 tokens committed per cycle · identical output</figcaption>
-    </figure>
+  <div class="cviewport" id="cviewport" tabindex="0" aria-label="Demo clips. Move the pointer to either side to slide, drag, or use the arrow keys.">
+    <div class="cstrip" id="cstrip">
+      <figure class="cslide" role="group" aria-label="Clip 1 of 4">
+        <div class="videobox"><video controls playsinline preload="metadata" poster="assets/demo1_mvbench_plain_poster.jpg"><source src="assets/demo1_mvbench_plain.mp4" type="video/mp4"></video></div>
+        <figcaption><b>MVBench</b> · 9 s clip · <b>4.66×</b> decoding speedup · 6.67 tokens committed per cycle · identical output</figcaption>
+      </figure>
+      <figure class="cslide" role="group" aria-label="Clip 2 of 4">
+        <div class="videobox"><video controls playsinline preload="metadata" poster="assets/demo2_vdc_plain_poster.jpg"><source src="assets/demo2_vdc_plain.mp4" type="video/mp4"></video></div>
+        <figcaption><b>VideoDetailCaption</b> · 111 s clip · <b>4.26×</b> decoding speedup · 6.08 tokens committed per cycle · identical output</figcaption>
+      </figure>
+      <figure class="cslide" role="group" aria-label="Clip 3 of 4">
+        <div class="videobox"><video controls playsinline preload="metadata" poster="assets/demo3_vdc_plain_poster.jpg"><source src="assets/demo3_vdc_plain.mp4" type="video/mp4"></video></div>
+        <figcaption><b>VideoDetailCaption</b> · 72 s clip · <b>3.95×</b> decoding speedup · 5.89 tokens committed per cycle · identical output</figcaption>
+      </figure>
+      <figure class="cslide" role="group" aria-label="Clip 4 of 4">
+        <div class="videobox"><video controls playsinline preload="metadata" poster="assets/demo4_vdc_plain_poster.jpg"><source src="assets/demo4_vdc_plain.mp4" type="video/mp4"></video></div>
+        <figcaption><b>VideoDetailCaption</b> · 84 s clip · <b>3.72×</b> decoding speedup · 5.45 tokens committed per cycle · identical output</figcaption>
+      </figure>
+    </div>
+    <div class="czone left" data-dir="-1" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></div>
+    <div class="czone right" data-dir="1" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div>
   </div>
   <div class="cbar">
-    <button class="cnav prev" type="button" aria-label="Previous clip" aria-controls="ctrack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
     <div class="cdots" aria-label="Choose a clip"></div>
-    <button class="cnav next" type="button" aria-label="Next clip" aria-controls="ctrack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
     <span class="ccount" aria-live="polite">1 / 4</span>
   </div>
 </div>
@@ -386,52 +391,120 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
 <script>
 (function(){
   var root = document.getElementById("demoCarousel"); if (!root) return;
-  var track = document.getElementById("ctrack");
-  var slides = [].slice.call(root.querySelectorAll(".cslide"));
-  var prev = root.querySelector(".cnav.prev"), next = root.querySelector(".cnav.next");
+  var vp = document.getElementById("cviewport"), strip = document.getElementById("cstrip");
+  var slides = [].slice.call(strip.querySelectorAll(".cslide"));
+  var zones = [].slice.call(root.querySelectorAll(".czone"));
   var dotsBox = root.querySelector(".cdots"), count = root.querySelector(".ccount");
   var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var cur = -1, dots = [];
-  slides.forEach(function(sl, i){
-    var b = document.createElement("button");
-    b.className = "cdot"; b.type = "button";
-    b.setAttribute("aria-label", "Show clip " + (i+1) + " of " + slides.length);
-    b.addEventListener("click", function(){ go(i); });
-    dotsBox.appendChild(b); dots.push(b);
-  });
-  function offsetOf(i){ return slides[i].offsetLeft - slides[0].offsetLeft; }
-  function go(i){
-    i = Math.max(0, Math.min(slides.length - 1, i));
-    track.scrollTo({left: offsetOf(i), behavior: reduce ? "auto" : "smooth"});
-    mark(i);
+  var n = slides.length, pos = 0, target = null, hoverDir = 0, hoverDepth = 0;
+  var armed = false, dragging = false, dragX0 = 0, dragY0 = 0, dragPos0 = 0, dragIdx0 = 0, dragTarget = null;
+  var idx = -1, raf = null, lastT = 0, wheelT = null, dots = [];
+
+  function gap(){ return parseFloat(getComputedStyle(strip).columnGap) || 16; }
+  function step(){ return slides[0].getBoundingClientRect().width + gap(); }
+  function maxPos(){ return (n - 1) * step(); }
+  function clamp(x){ return Math.max(0, Math.min(maxPos(), x)); }
+  function nearest(p){ return Math.max(0, Math.min(n - 1, Math.round(p / step()))); }
+  function speed(){ return 240 + 1300 * hoverDepth; }              // px/s: gentle at the inner edge, brisk at the outer edge
+
+  function render(){
+    strip.style.transform = "translate3d(" + (-pos) + "px,0,0)";
+    var s = step();
+    slides.forEach(function(sl, i){ var d = Math.min(1, Math.abs(i * s - pos) / s); sl.style.opacity = (1 - 0.5 * d).toFixed(3); });
+    zones[0].classList.toggle("disabled", pos <= 1);
+    zones[1].classList.toggle("disabled", pos >= maxPos() - 1);
+    var k = nearest(pos); if (k !== idx) setIdx(k);
   }
-  function mark(i){
-    if (i === cur) return;
-    cur = i;
-    dots.forEach(function(d, j){ d.setAttribute("aria-current", j === i ? "true" : "false"); });
-    count.textContent = (i+1) + " / " + slides.length;
-    prev.disabled = i === 0; next.disabled = i === slides.length - 1;
-    slides.forEach(function(sl, j){                      // never leave an off-screen clip playing
-      var v = sl.querySelector("video");
-      if (v && j !== i && !v.paused) v.pause();
+  function setIdx(k){
+    idx = k;
+    dots.forEach(function(d, j){ d.setAttribute("aria-current", j === k ? "true" : "false"); });
+    count.textContent = (k + 1) + " / " + n;
+    slides.forEach(function(sl, j){                                 // only the centred clip is interactive; others pause
+      sl.classList.toggle("is-current", j === k);
+      var v = sl.querySelector("video"); if (v && j !== k && !v.paused) v.pause();
     });
   }
-  var t;
-  track.addEventListener("scroll", function(){           // keep state in sync with swipe and drag
-    clearTimeout(t);
-    t = setTimeout(function(){
-      var x = track.scrollLeft, best = 0, bd = Infinity;
-      slides.forEach(function(sl, j){ var d = Math.abs(offsetOf(j) - x); if (d < bd){ bd = d; best = j; } });
-      mark(best);
-    }, 90);
-  }, {passive: true});
-  prev.addEventListener("click", function(){ go(cur - 1); });
-  next.addEventListener("click", function(){ go(cur + 1); });
-  root.addEventListener("keydown", function(e){
-    if (e.target && e.target.closest && e.target.closest("video")) return;   // let the player seek
-    if (e.key === "ArrowLeft"){ e.preventDefault(); go(cur - 1); }
-    else if (e.key === "ArrowRight"){ e.preventDefault(); go(cur + 1); }
+  function tick(t){
+    var dt = lastT ? Math.min(0.05, (t - lastT) / 1000) : 0; lastT = t;
+    if (hoverDir && !dragging){ pos = clamp(pos + hoverDir * speed() * dt); }
+    else if (!dragging && target !== null){
+      var d = target - pos;
+      if (Math.abs(d) < 0.5){ pos = target; target = null; } else pos += d * (1 - Math.exp(-dt * 9));
+    }
+    render();
+    if (hoverDir || target !== null || dragging) raf = requestAnimationFrame(tick); else { raf = null; lastT = 0; }
+  }
+  function run(){ if (raf === null){ lastT = 0; raf = requestAnimationFrame(tick); } }
+  function goTo(k){
+    k = Math.max(0, Math.min(n - 1, k)); hoverDir = 0;
+    if (reduce){ pos = k * step(); target = null; render(); } else { target = k * step(); run(); }
+  }
+  function settle(){ target = nearest(pos) * step(); run(); }
+
+  slides.forEach(function(sl, i){
+    var b = document.createElement("button"); b.className = "cdot"; b.type = "button";
+    b.setAttribute("aria-label", "Show clip " + (i + 1) + " of " + n);
+    b.addEventListener("click", function(){ goTo(i); });
+    dotsBox.appendChild(b); dots.push(b);
   });
-  mark(0);
+
+  // hover-to-scroll: resting the mouse on a side zone slides the reel that way; leaving it settles on the nearest clip
+  zones.forEach(function(z){
+    var dir = +z.getAttribute("data-dir");
+    function depth(e){ var r = z.getBoundingClientRect(), x = (e.clientX - r.left) / Math.max(1, r.width); return Math.max(0, Math.min(1, dir < 0 ? 1 - x : x)); }
+    function arm(e){ if (e.pointerType !== "mouse" || reduce || dragging) return; hoverDepth = depth(e); if (!hoverDir){ hoverDir = dir; target = null; run(); } }
+    z.addEventListener("pointerenter", arm);
+    z.addEventListener("pointermove", arm);
+    z.addEventListener("pointerleave", function(){ if (hoverDir){ hoverDir = 0; settle(); } });
+  });
+
+  // drag / swipe: nothing happens until the pointer has moved 8 px sideways, so clicks and taps on the player still work
+  vp.addEventListener("pointerdown", function(e){
+    if (e.button) return;
+    var v = e.target.closest && e.target.closest("video");
+    if (v && e.pointerType === "mouse"){ var r = v.getBoundingClientRect(); if (e.clientY > r.bottom - 64) return; }   // the control bar scrubs, not drags
+    armed = true; dragging = false; dragX0 = e.clientX; dragY0 = e.clientY; dragPos0 = pos; dragIdx0 = nearest(pos);
+    dragTarget = e.target.closest ? e.target.closest(".czone") : null;
+  });
+  vp.addEventListener("pointermove", function(e){
+    if (!armed) return;
+    var dx = e.clientX - dragX0, dy = e.clientY - dragY0;
+    if (!dragging){
+      if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(dy)) return;
+      dragging = true; hoverDir = 0; target = null; vp.classList.add("dragging");
+      try { vp.setPointerCapture(e.pointerId); } catch (_){}
+      run();
+    }
+    pos = clamp(dragPos0 - dx);
+  });
+  function release(e){
+    if (!armed) return; armed = false;
+    if (dragging){
+      dragging = false; vp.classList.remove("dragging");
+      var dx = e.clientX - dragX0;
+      goTo(Math.abs(dx) > 0.12 * step() ? dragIdx0 + (dx < 0 ? 1 : -1) : nearest(pos));
+    } else if (dragTarget){ goTo(nearest(pos) + (+dragTarget.getAttribute("data-dir"))); }   // a plain click on a side zone steps one clip
+    dragTarget = null;
+  }
+  vp.addEventListener("pointerup", release);
+  vp.addEventListener("pointercancel", release);
+
+  // horizontal trackpad swipe
+  vp.addEventListener("wheel", function(e){
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+    e.preventDefault(); hoverDir = 0; target = null; pos = clamp(pos + e.deltaX); render();
+    clearTimeout(wheelT); wheelT = setTimeout(settle, 140);
+  }, {passive: false});
+
+  vp.addEventListener("keydown", function(e){
+    if (e.target.closest && e.target.closest("video")) return;
+    if (e.key === "ArrowLeft"){ e.preventDefault(); goTo(nearest(pos) - 1); }
+    else if (e.key === "ArrowRight"){ e.preventDefault(); goTo(nearest(pos) + 1); }
+    else if (e.key === "Home"){ e.preventDefault(); goTo(0); }
+    else if (e.key === "End"){ e.preventDefault(); goTo(n - 1); }
+  });
+
+  var rz; window.addEventListener("resize", function(){ clearTimeout(rz); rz = setTimeout(function(){ pos = Math.max(0, idx) * step(); target = null; render(); }, 80); });
+  render();
 })();
 </script>
