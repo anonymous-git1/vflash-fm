@@ -340,7 +340,7 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
     <tr><td>SpecVLM (0.5B drafter)</td><td>1.83</td><td>1.82</td><td>1.77</td><td>1.76</td><td>1.86</td><td>1.81</td></tr>
     <tr><td>ParallelVLM (0.5B drafter)</td><td>2.12</td><td>2.06</td><td>2.15</td><td>2.14</td><td>2.10</td><td>2.11</td></tr>
     <tr><td>SPARROW (learned drafter)</td><td>2.84</td><td>2.96</td><td>2.69</td><td>not reported</td><td>2.77</td><td>2.82</td></tr>
-    <tr class="ours"><td>VFlash-FM, Tree-60</td><td>3.644</td><td>4.176</td><td>3.606</td><td>4.087</td><td>3.734</td><td>3.850</td></tr>
+    <tr class="ours"><td>VFlash-FM (ours), Tree-60</td><td>3.644</td><td>4.176</td><td>3.606</td><td>4.087</td><td>3.734</td><td>3.850</td></tr>
     </tbody></table></div>
   </details>
 </div>
@@ -362,7 +362,7 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
     {name:"SpecVLM (0.5B)",     color:tok("--g1"), v:[1.83,1.82,1.77,1.76,1.86,1.81]},
     {name:"ParallelVLM (0.5B)", color:tok("--g2"), v:[2.12,2.06,2.15,2.14,2.10,2.11]},
     {name:"SPARROW",            color:tok("--g3"), v:[2.84,2.96,2.69,null,2.77,2.82]},
-    {name:"VFlash-FM, Tree-60", color:tok("--fm"), v:[3.644,4.176,3.606,4.087,3.734,3.850], ours:true}
+    {name:"VFlash-FM (ours), Tree-60", color:tok("--fm"), v:[3.644,4.176,3.606,4.087,3.734,3.850], ours:true}
   ];
   var svg = document.getElementById("svgBars"), tip = document.getElementById("tipBars"), chart = document.getElementById("chartBars");
   var W=860, H=360, L=44, R=12, T=14, B=44, pw=W-L-R, ph=H-T-B, ymax=4.5;
