@@ -1,4 +1,4 @@
-<title>VFlash-FM</title>
+<title>VFlash-FM Project Page</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
 :root{
@@ -11,6 +11,7 @@
   --display:"Bricolage Grotesque","Source Sans 3",system-ui,sans-serif;
   --body:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --measure:880px; --figure:880px;   /* one column: prose, captions, diagram and chart share it */
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){
@@ -37,12 +38,12 @@
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:20px;line-height:1.6;
   padding-inline:16px;padding-block:0 64px;-webkit-font-smoothing:antialiased}
 a{color:inherit}
-.wrap{max-width:900px;margin:0 auto}
+.wrap{max-width:var(--figure);margin:0 auto}
 h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.1;text-wrap:balance;margin:0}
 h1{font-size:clamp(40px,7vw,64px);letter-spacing:-.02em}
-h2{font-size:clamp(28px,3.8vw,36px);margin-block:56px 12px;letter-spacing:-.01em}
+h2{font-size:clamp(28px,3.8vw,36px);margin-block:56px 12px;margin-inline:auto;max-width:var(--measure);letter-spacing:-.01em}
 h3{font-size:23px;margin-block:22px 8px}
-p{margin-block:0 14px;max-width:70ch}
+p{margin:0 auto 14px;max-width:var(--measure)}
 .eyebrow{font-size:14.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
 header{padding-block:48px 8px;text-align:center}
 header .sub{font-family:var(--display);font-weight:500;font-size:clamp(22px,3vw,28px);color:var(--ink2);margin:10px auto 0;max-width:34ch}
@@ -53,14 +54,14 @@ header .sub{font-family:var(--display);font-weight:500;font-size:clamp(22px,3vw,
 .btn:focus-visible{box-shadow:0 0 0 3px var(--green-soft)}
 .btn.soon{color:var(--muted);border-style:dashed;cursor:default}
 .btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.lede{font-size:23px;line-height:1.5;max-width:64ch;margin:0 auto 6px}
+.lede{font-size:23px;line-height:1.5;max-width:var(--measure);margin:0 auto 6px}
 .lede b{color:var(--green)}
 figure{margin:0}
 figcaption{font-size:17.5px;color:var(--ink2);line-height:1.5;margin-top:10px;max-width:80ch}
-figure.bleed > figcaption{max-width:900px;margin-inline:auto}   /* wide figures: caption aligns with the text column */
+.fig > figcaption{max-width:var(--measure);margin-inline:auto;margin-bottom:24px}
 .bleed{width:min(1240px,calc(100vw - 48px));margin-left:50%;transform:translateX(-50%)}
 .carousel{margin-top:10px;--focus:70%;--off:.55;--stack:.10;--rot:48;--depth:260;--depth2:90;--scale:.85;--vp-ar:100/43}
-.carousel.bleed{width:min(1400px,calc(100vw - 48px),calc((100vh - 230px) * 100 / 43))}
+.carousel.bleed{width:min(calc(var(--figure) / .7),calc(100vw - 48px),calc((100vh - 230px) * 100 / 43))}
 .cviewport{position:relative;overflow:hidden;border-radius:12px;touch-action:pan-y;user-select:none;-webkit-user-select:none;
   aspect-ratio:var(--vp-ar);perspective:1600px;perspective-origin:50% 50%}
 .cviewport.dragging{cursor:grabbing}
@@ -70,7 +71,7 @@ figure.bleed > figcaption{max-width:900px;margin-inline:auto}   /* wide figures:
 .cslide.is-current{pointer-events:auto}
 .cslide .videobox{box-shadow:0 14px 34px rgba(0,0,0,.30)}
 .ccaps{display:grid;margin-top:12px}                       /* all captions share one cell: the box is as tall as the tallest */
-.ccap{grid-area:1/1;margin:0;text-align:center;opacity:0;transition:opacity .25s;font-size:17.5px;color:var(--ink2);line-height:1.5}
+.ccap{grid-area:1/1;margin:0 auto;max-width:var(--measure);text-wrap:balance;text-align:center;opacity:0;transition:opacity .25s;font-size:17.5px;color:var(--ink2);line-height:1.5}
 .ccap.on{opacity:1}
 .czone{position:absolute;top:0;bottom:0;width:calc((100% - var(--focus)) / 2);z-index:3;display:flex;align-items:center;justify-content:center;
   cursor:pointer;transition:opacity .2s}
@@ -90,43 +91,54 @@ figure.bleed > figcaption{max-width:900px;margin-inline:auto}   /* wide figures:
 .ccount{font-size:16.5px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:50px;text-align:center}
 .videobox{border-radius:12px;overflow:hidden;background:#000;border:1px solid var(--line)}
 .videobox video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000}
-.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:16.5px;color:var(--ink2);margin-top:10px;align-items:center}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14.5px;color:var(--ink2);margin-top:10px;align-items:center}
 .legend .k{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid transparent}
 .chart{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 16px 10px;position:relative}
-.chart .title{font-weight:600;font-size:19px;margin:0 0 2px}
-.chart .subtitle{font-size:16.5px;color:var(--muted);margin:0 0 8px}
+.chart .title{font-weight:600;font-size:17px;margin:0 0 2px}
+.chart .subtitle{font-size:14.5px;color:var(--muted);margin:0 0 8px;max-width:72ch}
 .chart svg{display:block;width:100%;height:auto;font-family:var(--body)}
-.chart .axis text{fill:var(--muted);font-size:14px}
+.chart .axis text{fill:var(--muted);font-size:12px}
 .chart .grid line{stroke:var(--grid);stroke-width:1}
 .chart .base{stroke:var(--line);stroke-width:1}
-.chart .lbl{fill:var(--ink);font-size:15px;font-weight:600}
-.chart .cat{fill:var(--ink2);font-size:16px}
-.chart .nr{fill:var(--muted);font-size:13.5px}
+.chart .lbl{fill:var(--ink);font-size:13px;font-weight:600}
+.chart .cat{fill:var(--ink2);font-size:13.5px}
+.chart .nr{fill:var(--muted);font-size:12px}
+.chart .cat.row{fill:var(--ink);font-weight:600;font-size:13.5px}
+.chart .vl{fill:var(--ink2);font-size:11.5px;font-variant-numeric:tabular-nums}
+.chart .vl.ours{fill:var(--ink);font-weight:600;font-size:12px}
 .tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:14px;line-height:1.35;padding:7px 10px;border-radius:8px;
   transform:translate(-50%,calc(-100% - 10px));white-space:nowrap;opacity:0;transition:opacity .12s}
 .tip b{font-size:16px;display:block}
 .tip.on{opacity:1}
 details{margin-top:10px}
-summary{cursor:pointer;font-size:16.5px;color:var(--ink2);font-weight:600}
+summary{cursor:pointer;font-size:14.5px;color:var(--ink2);font-weight:600}
 summary:focus-visible{outline:2px solid var(--green);outline-offset:2px;border-radius:4px}
 .tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-top:10px}
-table{border-collapse:collapse;width:100%;font-size:17px;font-variant-numeric:tabular-nums}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
 th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
-th{font-weight:600;color:var(--ink2);font-size:15.5px}
+th{font-weight:600;color:var(--ink2);font-size:14px}
 th:first-child,td:first-child{text-align:left}
 tr.ours td{background:var(--green-soft);font-weight:600}
 tr:last-child td{border-bottom:none}
-.note{font-size:16.5px;color:var(--muted);margin-top:8px;max-width:80ch}
+.note{font-size:16.5px;color:var(--muted);margin-top:8px;max-width:var(--measure)}
+.hint-narrow{display:none}
 footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:16.5px}
 @media (max-width:700px){
   body{font-size:18px}
+  .hint-narrow{display:block}
   .bleed,.carousel.bleed{width:100%;margin-left:0;transform:none}
   .carousel{--focus:100%;--off:1.02;--rot:30;--depth:120;--depth2:60;--scale:.92;--vp-ar:100/60}
   .czone{display:none}
 }
 @media (prefers-reduced-motion: reduce){ .tip{transition:none} .cdot{transition:none} .czone svg{transition:none} .ccap{transition:none} }
 .diagram{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
-.diagram svg{display:block;width:100%;min-width:860px;height:auto;font-family:var(--body);color:var(--ink)}
+.diagram svg{display:block;width:100%;height:auto;font-family:var(--body);color:var(--ink)}
+.diagram-compact{display:none;width:fit-content;max-width:100%;margin-inline:auto}
+.diagram-compact svg{width:330px;max-width:100%}
+.diagram-compact .d-h{font-size:15px} .diagram-compact .d-h2{font-size:14px} .diagram-compact .d-sub{font-size:11.5px}
+.diagram-compact .d-lbl,.diagram-compact .d-note{font-size:12.5px} .diagram-compact .d-boxt{font-size:12px} .diagram-compact .d-boxs{font-size:10.5px}
+.diagram-compact .d-tokt,.diagram-compact .d-anchort,.diagram-compact .d-not{font-size:10.5px}
+@media (max-width:899px){ .diagram-wide{display:none} .diagram-compact{display:block} }
 .d-h{font-size:18px;font-weight:700;fill:var(--ink)} .d-h2{font-size:17px;font-weight:600;fill:var(--ink)} .d-sub{font-size:13px;fill:var(--muted)} .d-note{font-size:14.5px;fill:var(--ink2)}
 .d-box{fill:var(--surface);stroke:var(--ink2);stroke-width:1.2} .d-boxt{font-size:14px;fill:var(--ink);font-weight:600} .d-boxs{font-size:12px;fill:var(--ink2)}
 .d-green{fill:var(--green-soft);stroke:var(--green);stroke-width:1.5}
@@ -142,12 +154,11 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
 
 <div class="wrap">
 <header>
-  <div class="eyebrow">ICLR 2027 submission · under review</div>
   <h1>VFlash-FM</h1>
   <p class="sub">Flow-Trained One-Pass Drafting for Video Language Models</p>
   <div class="btns">
-    <span class="btn soon" title="Added after the review period"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/></svg>Paper</span>
-    <span class="btn soon" title="Added after the review period"><svg viewBox="0 0 24 24"><path d="M8 6l-6 6 6 6"/><path d="M16 6l6 6-6 6"/></svg>Code</span>
+    <span class="btn soon" title="Coming soon"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/></svg>Paper</span>
+    <span class="btn soon" title="Coming soon"><svg viewBox="0 0 24 24"><path d="M8 6l-6 6 6 6"/><path d="M16 6l6 6-6 6"/></svg>Code</span>
     <a class="btn" href="#demo"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9z"/></svg>Demo</a>
     <a class="btn" href="#how">How it works</a>
     <a class="btn" href="#results">Results</a>
@@ -189,12 +200,13 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
     <span class="ccount">1 / 4</span>
   </div>
 </div>
+<p class="note hint-narrow">On a small screen, use the player’s full-screen button to read the text inside each clip.</p>
 <p class="note">Decode time after prefill, recorded with the paper's evaluation harness: native grouped-query attention, preallocated KV caches, block 16, one drafter forward per block, greedy decoding. Autoregressive decoding measures 10.6 to 11.1 ms per token on these clips.</p>
 
 <h2 id="how">How VFlash-FM works</h2>
 <p>The drafter never processes the video. It reads the hidden states the frozen target has already computed for every context position, proposes a whole block of 15 tokens in one forward, and the unchanged target verifies the block in one forward. Whatever is accepted is exactly what the target would have generated on its own.</p>
-<figure class="bleed">
-  <div class="diagram">
+<figure class="fig">
+  <div class="diagram diagram-wide">
 <svg viewBox="0 0 960 524" role="img" aria-label="Autoregressive decoding needs one target forward per token. VFlash-FM proposes a block of 15 tokens with one drafter forward from the target's cached hidden states, the target verifies the block in one forward, and the accepted prefix plus the correction is committed.">
 <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" class="d-head"/></marker></defs>
 <text x="10" y="52" class="d-h">Autoregressive</text><text x="10" y="70" class="d-sub">one target forward per token</text>
@@ -320,6 +332,127 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
 <text x="525" y="501" class="d-lbl">the next cycle starts from “in” as its anchor</text>
 </svg>
   </div>
+  <div class="diagram diagram-compact">
+<svg viewBox="0 0 330 860" role="img" aria-label="Autoregressive decoding needs one target forward per token. VFlash-FM proposes a block of 15 tokens with one drafter forward from the target’s cached hidden states, the target verifies the block in one forward, and the accepted prefix plus the correction is committed.">
+<defs><marker id="arrc" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" class="d-head"/></marker></defs>
+<text x="4" y="16" class="d-h">Autoregressive</text>
+<text x="4" y="31" class="d-sub">one target forward per token</text>
+<rect x="4" y="46" width="70" height="24" rx="6" class="d-box"/>
+<text x="39" y="62" text-anchor="middle" class="d-boxt">target 7B</text>
+<line x1="39" y1="71" x2="39" y2="81" class="d-arrow" marker-end="url(#arrc)"/>
+<rect x="21.9" y="84" width="34.2" height="20" rx="4" class="d-tok"/><text x="39" y="98" text-anchor="middle" class="d-tokt">less</text>
+<rect x="82" y="46" width="70" height="24" rx="6" class="d-box"/>
+<text x="117" y="62" text-anchor="middle" class="d-boxt">target 7B</text>
+<line x1="117" y1="71" x2="117" y2="81" class="d-arrow" marker-end="url(#arrc)"/>
+<rect x="103.05" y="84" width="27.9" height="20" rx="4" class="d-tok"/><text x="117" y="98" text-anchor="middle" class="d-tokt">top</text>
+<rect x="160" y="46" width="70" height="24" rx="6" class="d-box"/>
+<text x="195" y="62" text-anchor="middle" class="d-boxt">target 7B</text>
+<line x1="195" y1="71" x2="195" y2="81" class="d-arrow" marker-end="url(#arrc)"/>
+<rect x="181.05" y="84" width="27.9" height="20" rx="4" class="d-tok"/><text x="195" y="98" text-anchor="middle" class="d-tokt">and</text>
+<rect x="238" y="46" width="70" height="24" rx="6" class="d-box"/>
+<text x="273" y="62" text-anchor="middle" class="d-boxt">target 7B</text>
+<line x1="273" y1="71" x2="273" y2="81" class="d-arrow" marker-end="url(#arrc)"/>
+<rect x="252.75" y="84" width="40.5" height="20" rx="4" class="d-tok"/><text x="273" y="98" text-anchor="middle" class="d-tokt">black</text>
+<rect x="4" y="114" width="70" height="24" rx="6" class="d-box"/>
+<text x="39" y="130" text-anchor="middle" class="d-boxt">target 7B</text>
+<line x1="39" y1="139" x2="39" y2="149" class="d-arrow" marker-end="url(#arrc)"/>
+<rect x="18.75" y="152" width="40.5" height="20" rx="4" class="d-tok"/><text x="39" y="166" text-anchor="middle" class="d-tokt">pants</text>
+<rect x="82" y="114" width="70" height="24" rx="6" class="d-box"/>
+<text x="117" y="130" text-anchor="middle" class="d-boxt">target 7B</text>
+<line x1="117" y1="139" x2="117" y2="149" class="d-arrow" marker-end="url(#arrc)"/>
+<rect x="106" y="152" width="22" height="20" rx="4" class="d-tok"/><text x="117" y="166" text-anchor="middle" class="d-tokt">,</text>
+<rect x="160" y="114" width="70" height="24" rx="6" class="d-box"/>
+<text x="195" y="130" text-anchor="middle" class="d-boxt">target 7B</text>
+<line x1="195" y1="139" x2="195" y2="149" class="d-arrow" marker-end="url(#arrc)"/>
+<rect x="171.6" y="152" width="46.8" height="20" rx="4" class="d-tok"/><text x="195" y="166" text-anchor="middle" class="d-tokt">stands</text>
+<rect x="238" y="114" width="70" height="24" rx="6" class="d-box"/>
+<text x="273" y="130" text-anchor="middle" class="d-boxt">target 7B</text>
+<line x1="273" y1="139" x2="273" y2="149" class="d-arrow" marker-end="url(#arrc)"/>
+<rect x="262" y="152" width="22" height="20" rx="4" class="d-tok"/><text x="273" y="166" text-anchor="middle" class="d-tokt">in</text>
+<text x="4" y="200" class="d-note">8 tokens = 8 target forwards,</text>
+<text x="4" y="216" class="d-note">each over the full 25,119-token context</text>
+<text x="4" y="232" class="d-note">(10.7 ms each on the demo clip)</text>
+<line x1="0" y1="246" x2="330" y2="246" class="d-div"/>
+<text x="4" y="272" class="d-h">VFlash-FM</text>
+<text x="4" y="287" class="d-sub">one drafter forward + one target forward</text>
+<text x="4" y="301" class="d-sub">per block of 16</text>
+<rect x="4" y="314" width="190" height="40" rx="8" class="d-box"/>
+<text x="99" y="331" text-anchor="middle" class="d-boxt">frozen target 7B</text>
+<text x="99" y="345" text-anchor="middle" class="d-boxs">video + prompt prefilled once</text>
+<line x1="24" y1="356" x2="24" y2="386" class="d-arrow" marker-end="url(#arrc)"/>
+<text x="36" y="375" class="d-lbl">linear projector: keys &amp; values</text>
+<rect x="4" y="388" width="190" height="40" rx="8" class="d-green"/>
+<text x="99" y="405" text-anchor="middle" class="d-boxt">drafter</text>
+<text x="99" y="419" text-anchor="middle" class="d-boxs">4 layers</text>
+<line x1="24" y1="430" x2="24" y2="470" class="d-arrow" marker-end="url(#arrc)"/>
+<text x="36" y="446" class="d-lbl">one forward: anchor + 15 masks in</text>
+<text x="36" y="461" class="d-lbl">15 tokens out</text>
+<text x="4" y="484" class="d-h2">proposed</text>
+<text x="4" y="498" class="d-sub">one drafter forward</text>
+<rect x="4" y="506" width="46.8" height="20" rx="4" class="d-anchor"/><text x="27.4" y="520" text-anchor="middle" class="d-anchort">sleeve</text>
+<rect x="53.3" y="506" width="34.2" height="20" rx="4" class="d-tok"/><text x="70.4" y="520" text-anchor="middle" class="d-tokt">less</text>
+<rect x="90" y="506" width="27.9" height="20" rx="4" class="d-tok"/><text x="103.95" y="520" text-anchor="middle" class="d-tokt">top</text>
+<rect x="120.4" y="506" width="27.9" height="20" rx="4" class="d-tok"/><text x="134.35" y="520" text-anchor="middle" class="d-tokt">and</text>
+<rect x="150.8" y="506" width="40.5" height="20" rx="4" class="d-tok"/><text x="171.05" y="520" text-anchor="middle" class="d-tokt">black</text>
+<rect x="193.8" y="506" width="40.5" height="20" rx="4" class="d-tok"/><text x="214.05" y="520" text-anchor="middle" class="d-tokt">pants</text>
+<rect x="236.8" y="506" width="22" height="20" rx="4" class="d-tok"/><text x="247.8" y="520" text-anchor="middle" class="d-tokt">,</text>
+<rect x="261.3" y="506" width="46.8" height="20" rx="4" class="d-tok"/><text x="284.7" y="520" text-anchor="middle" class="d-tokt">stands</text>
+<rect x="4" y="532" width="46.8" height="20" rx="4" class="d-tok"/><text x="27.4" y="546" text-anchor="middle" class="d-tokt">stands</text>
+<rect x="53.3" y="532" width="59.4" height="20" rx="4" class="d-tok"/><text x="83" y="546" text-anchor="middle" class="d-tokt">standing</text>
+<rect x="115.2" y="532" width="27.9" height="20" rx="4" class="d-tok"/><text x="129.15" y="546" text-anchor="middle" class="d-tokt">the</text>
+<rect x="145.6" y="532" width="22" height="20" rx="4" class="d-tok"/><text x="156.6" y="546" text-anchor="middle" class="d-tokt">el</text>
+<rect x="170.1" y="532" width="40.5" height="20" rx="4" class="d-tok"/><text x="190.35" y="546" text-anchor="middle" class="d-tokt">horse</text>
+<rect x="213.1" y="532" width="40.5" height="20" rx="4" class="d-tok"/><text x="233.35" y="546" text-anchor="middle" class="d-tokt">horse</text>
+<rect x="256.1" y="532" width="22" height="20" rx="4" class="d-tok"/><text x="267.1" y="546" text-anchor="middle" class="d-tokt">,</text>
+<rect x="280.6" y="532" width="22" height="20" rx="4" class="d-tok"/><text x="291.6" y="546" text-anchor="middle" class="d-tokt">,</text>
+<line x1="24" y1="558" x2="24" y2="590" class="d-arrow" marker-end="url(#arrc)"/>
+<text x="36" y="579" class="d-lbl">target verifies all 16 in one forward</text>
+<text x="4" y="610" class="d-h2">verified</text>
+<text x="4" y="624" class="d-sub">one target forward</text>
+<rect x="4" y="632" width="46.8" height="20" rx="4" class="d-anchor"/><text x="27.4" y="646" text-anchor="middle" class="d-anchort">sleeve</text>
+<rect x="53.3" y="632" width="34.2" height="20" rx="4" class="d-ok"/><text x="70.4" y="646" text-anchor="middle" class="d-tokt">less</text>
+<rect x="90" y="632" width="27.9" height="20" rx="4" class="d-ok"/><text x="103.95" y="646" text-anchor="middle" class="d-tokt">top</text>
+<rect x="120.4" y="632" width="27.9" height="20" rx="4" class="d-ok"/><text x="134.35" y="646" text-anchor="middle" class="d-tokt">and</text>
+<rect x="150.8" y="632" width="40.5" height="20" rx="4" class="d-ok"/><text x="171.05" y="646" text-anchor="middle" class="d-tokt">black</text>
+<rect x="193.8" y="632" width="40.5" height="20" rx="4" class="d-ok"/><text x="214.05" y="646" text-anchor="middle" class="d-tokt">pants</text>
+<rect x="236.8" y="632" width="22" height="20" rx="4" class="d-ok"/><text x="247.8" y="646" text-anchor="middle" class="d-tokt">,</text>
+<rect x="261.3" y="632" width="46.8" height="20" rx="4" class="d-ok"/><text x="284.7" y="646" text-anchor="middle" class="d-tokt">stands</text>
+<rect x="4" y="658" width="46.8" height="20" rx="4" class="d-no"/><text x="27.4" y="672" text-anchor="middle" class="d-not">stands</text>
+<line x1="9" y1="668" x2="45.8" y2="668" class="d-strike"/>
+<rect x="53.3" y="658" width="59.4" height="20" rx="4" class="d-no"/><text x="83" y="672" text-anchor="middle" class="d-not">standing</text>
+<line x1="58.3" y1="668" x2="107.7" y2="668" class="d-strike"/>
+<rect x="115.2" y="658" width="27.9" height="20" rx="4" class="d-no"/><text x="129.15" y="672" text-anchor="middle" class="d-not">the</text>
+<line x1="120.2" y1="668" x2="138.1" y2="668" class="d-strike"/>
+<rect x="145.6" y="658" width="22" height="20" rx="4" class="d-no"/><text x="156.6" y="672" text-anchor="middle" class="d-not">el</text>
+<line x1="150.6" y1="668" x2="162.6" y2="668" class="d-strike"/>
+<rect x="170.1" y="658" width="40.5" height="20" rx="4" class="d-no"/><text x="190.35" y="672" text-anchor="middle" class="d-not">horse</text>
+<line x1="175.1" y1="668" x2="205.6" y2="668" class="d-strike"/>
+<rect x="213.1" y="658" width="40.5" height="20" rx="4" class="d-no"/><text x="233.35" y="672" text-anchor="middle" class="d-not">horse</text>
+<line x1="218.1" y1="668" x2="248.6" y2="668" class="d-strike"/>
+<rect x="256.1" y="658" width="22" height="20" rx="4" class="d-no"/><text x="267.1" y="672" text-anchor="middle" class="d-not">,</text>
+<line x1="261.1" y1="668" x2="273.1" y2="668" class="d-strike"/>
+<rect x="280.6" y="658" width="22" height="20" rx="4" class="d-no"/><text x="291.6" y="672" text-anchor="middle" class="d-not">,</text>
+<line x1="285.6" y1="668" x2="297.6" y2="668" class="d-strike"/>
+<text x="4" y="698" class="d-lbl">target’s correction →</text>
+<rect x="146" y="684" width="22" height="20" rx="4" class="d-fix"/><text x="157" y="698" text-anchor="middle" class="d-tokt">in</text>
+<line x1="24" y1="710" x2="24" y2="752" class="d-arrow" marker-end="url(#arrc)"/>
+<text x="36" y="728" class="d-lbl">accepted prefix + target’s correction;</text>
+<text x="36" y="743" class="d-lbl">the rest is discarded</text>
+<text x="4" y="772" class="d-h2">committed</text>
+<text x="4" y="786" class="d-sub">8 tokens this cycle</text>
+<rect x="4" y="794" width="46.8" height="20" rx="4" class="d-anchor"/><text x="27.4" y="808" text-anchor="middle" class="d-anchort">sleeve</text>
+<rect x="53.3" y="794" width="34.2" height="20" rx="4" class="d-ok"/><text x="70.4" y="808" text-anchor="middle" class="d-tokt">less</text>
+<rect x="90" y="794" width="27.9" height="20" rx="4" class="d-ok"/><text x="103.95" y="808" text-anchor="middle" class="d-tokt">top</text>
+<rect x="120.4" y="794" width="27.9" height="20" rx="4" class="d-ok"/><text x="134.35" y="808" text-anchor="middle" class="d-tokt">and</text>
+<rect x="150.8" y="794" width="40.5" height="20" rx="4" class="d-ok"/><text x="171.05" y="808" text-anchor="middle" class="d-tokt">black</text>
+<rect x="193.8" y="794" width="40.5" height="20" rx="4" class="d-ok"/><text x="214.05" y="808" text-anchor="middle" class="d-tokt">pants</text>
+<rect x="236.8" y="794" width="22" height="20" rx="4" class="d-ok"/><text x="247.8" y="808" text-anchor="middle" class="d-tokt">,</text>
+<rect x="261.3" y="794" width="46.8" height="20" rx="4" class="d-ok"/><text x="284.7" y="808" text-anchor="middle" class="d-tokt">stands</text>
+<rect x="4" y="820" width="22" height="20" rx="4" class="d-fix"/><text x="15" y="834" text-anchor="middle" class="d-tokt">in</text>
+<text x="36" y="830" class="d-lbl">the next cycle starts from</text>
+<text x="36" y="845" class="d-lbl">“in” as its anchor</text>
+</svg>
+  </div>
   <figcaption>One real cycle from a VideoDetailCaption clip. The drafter reads the target's cached hidden states through a linear projector and fills a block of masks in one forward. The target then scores all 16 tokens in one forward: the prefix that matches its own greedy choice is accepted (green), it supplies the token at the first disagreement (orange), and the rest is discarded. Here 7 drafts were accepted, so 2 forwards committed 8 tokens where autoregressive decoding needs 8 target forwards.</figcaption>
 </figure>
 
@@ -348,50 +481,101 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
 
 
 
-<footer>Project page for an anonymous ICLR 2027 submission.</footer>
 </div>
 
 <script>
 (function(){
-  var css = getComputedStyle(document.documentElement);
-  function tok(n){ return css.getPropertyValue(n).trim(); }
   var NS = "http://www.w3.org/2000/svg";
   function el(tag, attrs, parent){ var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
   var benches = ["VDC","Video-MME","MVBench","MLVU","LVB","Macro avg."];
   var series = [
-    {name:"SpecVLM (0.5B)",     color:tok("--g1"), v:[1.83,1.82,1.77,1.76,1.86,1.81]},
-    {name:"ParallelVLM (0.5B)", color:tok("--g2"), v:[2.12,2.06,2.15,2.14,2.10,2.11]},
-    {name:"SPARROW",            color:tok("--g3"), v:[2.84,2.96,2.69,null,2.77,2.82]},
-    {name:"VFlash-FM (ours), Tree-60", color:tok("--fm"), v:[3.644,4.176,3.606,4.087,3.734,3.850], ours:true}
+    {name:"SpecVLM (0.5B)",     fill:"var(--g1)", v:[1.83,1.82,1.77,1.76,1.86,1.81]},
+    {name:"ParallelVLM (0.5B)", fill:"var(--g2)", v:[2.12,2.06,2.15,2.14,2.10,2.11]},
+    {name:"SPARROW",            fill:"var(--g3)", v:[2.84,2.96,2.69,null,2.77,2.82]},
+    {name:"VFlash-FM (ours), Tree-60", fill:"var(--fm)", v:[3.644,4.176,3.606,4.087,3.734,3.850], ours:true}
   ];
   var svg = document.getElementById("svgBars"), tip = document.getElementById("tipBars"), chart = document.getElementById("chartBars");
-  var W=860, H=360, L=44, R=12, T=14, B=44, pw=W-L-R, ph=H-T-B, ymax=4.5;
-  var y = function(v){ return T + ph - (v/ymax)*ph; };
-  var g = el("g",{"class":"grid"},svg);
-  for (var t=1;t<=4;t++){ el("line",{x1:L,x2:W-R,y1:y(t),y2:y(t)},g); }
-  var ax = el("g",{"class":"axis"},svg);
-  for (var t2=0;t2<=4;t2++){ var tx=el("text",{x:L-8,y:y(t2)+4,"text-anchor":"end"},ax); tx.textContent = t2+"×"; }
-  el("line",{"class":"base",x1:L,x2:W-R,y1:y(0),y2:y(0)},svg);
-  var gw = pw/benches.length, bw=22, gap=2, n=series.length, block = n*bw+(n-1)*gap;
-  benches.forEach(function(b,i){
-    var x0 = L + gw*i + (gw-block)/2;
-    var c = el("text",{"class":"cat",x:L+gw*i+gw/2,y:H-16,"text-anchor":"middle"},svg); c.textContent=b;
-    series.forEach(function(s,j){
-      var x = x0 + j*(bw+gap), v = s.v[i];
-      if (v==null){ var nr=el("text",{"class":"nr",x:x+bw/2,y:y(0)-6,"text-anchor":"middle"},svg); nr.textContent="NR"; return; }
-      var h = y(0)-y(v), r = Math.min(4, h);
-      var d = "M"+x+","+y(0)+" v"+(-(h-r))+" a"+r+","+r+" 0 0 1 "+r+","+(-r)+" h"+(bw-2*r)+" a"+r+","+r+" 0 0 1 "+r+","+r+" v"+(h-r)+" z";
-      el("path",{d:d,fill:s.color},svg);
-      if (s.ours){ var lb=el("text",{"class":"lbl",x:x+bw/2,y:y(v)-6,"text-anchor":"middle"},svg); lb.textContent=v.toFixed(2)+"×"; }
-      var hit = el("rect",{x:x-2,y:T,width:bw+4,height:ph,fill:"transparent",tabindex:"0"},svg);
-      function show(){ tip.innerHTML=""; var bb=document.createElement("b"); bb.textContent=v.toFixed(v>=3?3:2)+"×"; tip.appendChild(bb); tip.appendChild(document.createTextNode(s.name+" · "+b));
-        var cr=chart.getBoundingClientRect(), sr=svg.getBoundingClientRect(), sx=sr.width/W; tip.style.left=(sr.left-cr.left+(x+bw/2)*sx)+"px"; tip.style.top=(sr.top-cr.top+y(v)*sx)+"px"; tip.classList.add("on"); }
-      function hide(){ tip.classList.remove("on"); }
-      hit.addEventListener("mouseenter",show); hit.addEventListener("mouseleave",hide); hit.addEventListener("focus",show); hit.addEventListener("blur",hide);
+  var YMAX = 4.5, lastW = 0;
+
+  function showTip(s, b, v, x, y){
+    tip.innerHTML = ""; var bb = document.createElement("b"); bb.textContent = v.toFixed(v >= 3 ? 3 : 2) + "×"; tip.appendChild(bb);
+    tip.appendChild(document.createTextNode(s.name + " · " + b));
+    var cr = chart.getBoundingClientRect(), sr = svg.getBoundingClientRect();
+    tip.style.left = (sr.left - cr.left + x) + "px"; tip.style.top = (sr.top - cr.top + y) + "px"; tip.classList.add("on");
+  }
+  function hideTip(){ tip.classList.remove("on"); }
+  function hitbox(x, y, w, h, s, b, v, tx, ty){
+    var hit = el("rect", {x:x, y:y, width:w, height:h, fill:"transparent", tabindex:"0"}, svg);
+    function show(){ showTip(s, b, v, tx, ty); }
+    hit.addEventListener("mouseenter", show); hit.addEventListener("mouseleave", hideTip);
+    hit.addEventListener("focus", show); hit.addEventListener("blur", hideTip);
+  }
+  function fill(node, s){ node.style.fill = s.fill; return node; }   /* var(--token): follows the theme without a redraw */
+
+  function columns(W){                                  /* wide: benchmarks along the x axis */
+    var H = Math.round(Math.max(280, Math.min(360, W * 0.36)));
+    var L = 34, R = 6, T = 20, B = 38, pw = W - L - R, ph = H - T - B;
+    var y = function(v){ return T + ph - (v / YMAX) * ph; };
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    var g = el("g", {"class":"grid"}, svg);
+    for (var t = 1; t <= 4; t++) el("line", {x1:L, x2:W - R, y1:y(t), y2:y(t)}, g);
+    var ax = el("g", {"class":"axis"}, svg);
+    for (var t2 = 0; t2 <= 4; t2++){ var tx = el("text", {x:L - 7, y:y(t2) + 4, "text-anchor":"end"}, ax); tx.textContent = t2 + "×"; }
+    el("line", {"class":"base", x1:L, x2:W - R, y1:y(0), y2:y(0)}, svg);
+    var gw = pw / benches.length, gap = 3, n = series.length;
+    var bw = Math.max(8, Math.min(24, Math.floor((gw * 0.8 - (n - 1) * gap) / n))), block = n * bw + (n - 1) * gap;
+    benches.forEach(function(b, i){
+      var x0 = L + gw * i + (gw - block) / 2;
+      var c = el("text", {"class":"cat", x:L + gw * i + gw / 2, y:H - 14, "text-anchor":"middle"}, svg); c.textContent = b;
+      series.forEach(function(s, j){
+        var x = x0 + j * (bw + gap), v = s.v[i];
+        if (v == null){ var nr = el("text", {"class":"nr", x:x + bw / 2, y:y(0) - 6, "text-anchor":"middle"}, svg); nr.textContent = "NR"; return; }
+        var h = y(0) - y(v), r = Math.min(4, h);
+        var d = "M" + x + "," + y(0) + " v" + (-(h - r)) + " a" + r + "," + r + " 0 0 1 " + r + "," + (-r) + " h" + (bw - 2 * r) + " a" + r + "," + r + " 0 0 1 " + r + "," + r + " v" + (h - r) + " z";
+        fill(el("path", {d:d}, svg), s);
+        if (s.ours){ var lb = el("text", {"class":"lbl", x:x + bw / 2, y:y(v) - 5, "text-anchor":"middle"}, svg); lb.textContent = v.toFixed(2) + "×"; }
+        hitbox(x - 1, T, bw + 2, ph, s, b, v, x + bw / 2, y(v));
+      });
     });
-  });
+  }
+
+  function rows(W){                                     /* narrow: one group per benchmark, bars run to the right */
+    var L = 4, R = 46, T = 6, barH = 12, barGap = 2, titleH = 21, groupGap = 9, axisH = 24, n = series.length;
+    var groupH = titleH + n * barH + (n - 1) * barGap, pw = W - L - R;
+    var H = T + benches.length * groupH + (benches.length - 1) * groupGap + axisH;
+    var x = function(v){ return L + (v / YMAX) * pw; };
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    var g = el("g", {"class":"grid"}, svg);
+    for (var t = 1; t <= 4; t++) el("line", {x1:x(t), x2:x(t), y1:T, y2:H - axisH}, g);
+    var ax = el("g", {"class":"axis"}, svg);
+    for (var t2 = 1; t2 <= 4; t2++){ var tx = el("text", {x:x(t2), y:H - 7, "text-anchor":"middle"}, ax); tx.textContent = t2 + "×"; }
+    el("line", {"class":"base", x1:L, x2:L, y1:T, y2:H - axisH}, svg);
+    benches.forEach(function(b, i){
+      var gy = T + i * (groupH + groupGap);
+      var c = el("text", {"class":"cat row", x:L, y:gy + 14}, svg); c.textContent = b;
+      series.forEach(function(s, j){
+        var by = gy + titleH + j * (barH + barGap), v = s.v[i];
+        if (v == null){ var nr = el("text", {"class":"nr", x:L + 6, y:by + barH - 2}, svg); nr.textContent = "NR"; return; }
+        var len = x(v) - L, r = Math.min(3, len);
+        var d = "M" + L + "," + by + " h" + (len - r) + " a" + r + "," + r + " 0 0 1 " + r + "," + r + " v" + (barH - 2 * r) + " a" + r + "," + r + " 0 0 1 " + (-r) + "," + r + " h" + (-(len - r)) + " z";
+        fill(el("path", {d:d}, svg), s);
+        var lb = el("text", {"class":"vl" + (s.ours ? " ours" : ""), x:x(v) + 6, y:by + barH - 2}, svg); lb.textContent = v.toFixed(2) + "×";
+        hitbox(L, by, pw + R - L, barH, s, b, v, x(v), by);
+      });
+    });
+  }
+
+  function draw(){
+    var W = Math.floor(svg.getBoundingClientRect().width);
+    if (!W || W === lastW) return;
+    lastW = W; hideTip();
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    if (W < 620) rows(W); else columns(W);
+  }
   var lg = document.getElementById("legendBars");
-  series.forEach(function(s){ var sp=document.createElement("span"); var k=document.createElement("span"); k.className="k"; k.style.background=s.color; sp.appendChild(k); sp.appendChild(document.createTextNode(s.name)); lg.appendChild(sp); });
+  series.forEach(function(s){ var sp = document.createElement("span"); var k = document.createElement("span"); k.className = "k"; k.style.background = s.fill; sp.appendChild(k); sp.appendChild(document.createTextNode(s.name)); lg.appendChild(sp); });
+  if (window.ResizeObserver) new ResizeObserver(draw).observe(chart); else window.addEventListener("resize", draw);
+  draw();
 })();
 </script>
 
